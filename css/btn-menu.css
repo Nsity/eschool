@@ -1,0 +1,49 @@
+.btn-menu {
+  color: #ffffff;
+  background-color: #6f5499;
+  border-color: none;
+}
+
+.btn-menu:hover,
+.btn-menu:focus,
+.btn-menu:active,
+.btn-menu.active,
+.open .dropdown-toggle.btn-menu {
+  color: #ffffff;
+  background-color: #6f5499;
+  border-color: #cdbfe3;
+}
+
+.btn-menu:active,
+.btn-menu.active,
+.open .dropdown-toggle.btn-menu {
+  background-image: none;
+}
+
+.btn-menu.disabled,
+.btn-menu[disabled],
+fieldset[disabled] .btn-menu,
+.btn-menu.disabled:hover,
+.btn-menu[disabled]:hover,
+fieldset[disabled] .btn-menu:hover,
+.btn-menu.disabled:focus,
+.btn-menu[disabled]:focus,
+fieldset[disabled] .btn-menu:focus,
+.btn-menu.disabled:active,
+.btn-menu[disabled]:active,
+fieldset[disabled] .btn-menu:active,
+.btn-menu.disabled.active,
+.btn-menu[disabled].active,
+fieldset[disabled] .btn-menu.active {
+  border-color: #6F5499;
+}
+
+button {
+    outline: none;
+    border:0;
+box-shadow:none;
+}
+.btn:focus,.btn:active:focus,.btn.active:focus,
+.btn.focus,.btn:active.focus,.btn.active.focus {
+    outline: none;
+}
