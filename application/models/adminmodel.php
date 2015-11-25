@@ -161,10 +161,10 @@
 		}
 
 
-		/*function getPeriods($id) {
+		function getPeriods($id) {
 			$query = $this->db->query("SELECT * FROM PERIOD WHERE YEAR_ID ='$id'");
 			return $query->result_array();
-		}*/
+		}
 
 
 
