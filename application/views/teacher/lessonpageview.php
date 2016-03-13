@@ -88,25 +88,23 @@
 						    <td data-editable='false' id="pupil_name"><?php echo $info[$i]['pupil_name'];?></td>
 						    <td data-editable='false' hidden="true" id="attendance_id"><?php if(isset($info[$i]['pass_id'])) echo $info[$i]['pass_id'];
 						    ?></td>
-						    <td <?php if(isset($info[$i]['pass'])) {
+						    <td class="pass <?php if(isset($info[$i]['pass'])) {
 							    switch($info[$i]['pass']) {
 								    case 'н': {
-									    ?>class="pass warning"<?php
+									    echo "warning";
 									    break;
 								    }
 								    case 'б': {
-									    ?>class="pass success"<?php
+									    echo "success";
 									    break;
 								    }
 								    case 'у': {
-									    ?>class="pass info"<?php
+									    echo "info";
 									    break;
 								    }
 								    }
-							    } else {
-								    ?>class="pass"<?php
 							    }
-							    ?>>
+							    ?>">
 								    <?php if(isset($info[$i]['pass']))  echo $info[$i]['pass'];?></td>
 						    <td class="note" data-id="<?php echo $info[$i]['note_id']; ?>"><?php echo $info[$i]['note']; ?></td>
 						    <td data-editable='false'><?php
@@ -249,6 +247,7 @@
 		    var oldValue = $(this).data('oldValue');
 		    newValue = $.trim(newValue);
 
+
 		    if (!(newValue == 'н' || newValue == 'у' || newValue == 'б' || newValue == "")) {
 			    return false; // reject change
 			} else {
@@ -290,6 +289,7 @@
 
 
 		$('#lesson td.note').on('change', function(evt, newValue) {
+
 			newValue = $.trim(newValue);
 			var base_url = '<?php echo base_url();?>';
 			//старое значение
@@ -365,6 +365,7 @@
 				},
 				success: function(a) {
 					//alert(a);
+
 					location.reload();
 				}
 			});

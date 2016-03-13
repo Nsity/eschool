@@ -167,7 +167,6 @@
 		}
 
 
-
 		private function _showDate($date) {
 			$day = date('d', strtotime($date));
 			$mounth = date('m', strtotime($date));

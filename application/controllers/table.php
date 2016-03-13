@@ -504,7 +504,14 @@
 			$achievement_id = $_POST['achievement'];
 			$type = $_POST['type'];
 			$this->table->changeAchievement($pupil_id, $lesson_id, $achievement_id, $mark, $type);
-			//echo $pupil_id;
+
+
+			if(!(isset($achievement_id) && $achievement_id != "")) {
+				$subject = $this->table->getSubjectNameByLessonId($lesson_id)['SUBJECT_NAME'];
+				$type = $this->table->getTypeById($type)['TYPE_NAME'];
+				$message = "Новая оценка ".$mark." "."(".$type.")"." по предмету ".$subject;
+				$this->_sendnotification($pupil_id, $message);
+			}
 		}
 
 		function changenote() {
@@ -513,6 +520,54 @@
 			$lesson_id = $_POST['lesson_id'];
 			$note_id = $_POST['note_id'];
 			$this->table->changeNote($pupil_id, $lesson_id, $note_id, $note);
+		}
+
+
+
+		function _sendnotification($pupil_id, $message) {
+			$apiKey = "AIzaSyAM-A6ttQQmkqllswtVu5eHQc01QmVq9gs";
+			$regIds = $this->table->getGCMIDs($pupil_id);
+
+			$regIdsArray = array();
+
+			foreach($regIds as $id) {
+			$regIdsArray[] = $id['GCM_USERS_REGID'];
+			}
+
+
+			// Replace with the real client registration IDs
+			$registrationIDs = $regIdsArray;
+
+			// Set POST variables
+		    $url = 'https://android.googleapis.com/gcm/send';
+
+		    $fields = array(
+		       'registration_ids' => $registrationIDs,
+		       'data' => array("message" => $message),
+		    );
+	 	    $headers = array(
+	 	        'Authorization: key=' . $apiKey,
+		        'Content-Type: application/json'
+		    );
+
+	 	    // Open connection
+			$ch = curl_init();
+
+		    // Set the URL, number of POST vars, POST data
+			curl_setopt( $ch, CURLOPT_URL, $url);
+		    curl_setopt( $ch, CURLOPT_POST, true);
+	        curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers);
+			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true);
+
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode( $fields));
+
+			// Execute post
+			$result = curl_exec($ch);
+
+			// Close connection
+			curl_close($ch);
+			echo $result;
 		}
 
 	}

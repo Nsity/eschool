@@ -356,11 +356,14 @@
 			$this->db->where('YEAR_ID', $id);
 			$this->db->update('PERIOD');
 		}
+		//$query = $this->db->query("SELECT COUNT(*) AS COUNT FROM PUPILS_CLASS
+			//WHERE CLASS_ID = '$previous'");
+
 //SELECT COUNT(*) AS COUNT FROM CLASS
 			//WHERE CLASS_PREVIOUS = '$previous'
 		function responseClassPrevious($previous) {
-			$query = $this->db->query("SELECT COUNT(*) AS COUNT FROM PUPILS_CLASS
-			WHERE CLASS_ID = '$previous'");
+			$query = $this->db->query("SELECT COUNT(*) AS COUNT FROM CLASS
+			WHERE CLASS_PREVIOUS = '$previous'");
 			return $query->row_array();
 		}
 
@@ -724,4 +727,21 @@
 		}
 
 
+
+		function getGCMIDs($pupil_id) {
+			$query = $this->db->query("SELECT * FROM GCM_USERS WHERE PUPIL_ID = '$pupil_id'");
+			return $query->result_array();
+		}
+
+
+		function getSubjectNameByLessonId($lesson_id) {
+			$query = $this->db->query("SELECT SUBJECT_NAME FROM SUBJECT s JOIN SUBJECTS_CLASS sc ON s.SUBJECT_ID = sc.SUBJECT_ID
+			JOIN LESSON l ON l.SUBJECTS_CLASS_ID = sc.SUBJECTS_CLASS_ID WHERE LESSON_ID = '$lesson_id'");
+			return $query->row_array();
+		}
+
+		function getTypeById($type_id) {
+			$query = $this->db->query("SELECT TYPE_NAME FROM TYPE WHERE TYPE_ID = '$type_id'");
+			return $query->row_array();
+		}
 	}
