@@ -624,6 +624,9 @@
 			$this->db->set($from."_ID", $id);
 			$this->db->set('MESSAGE_READ', 0);
 			$this->db->insert($to."S_MESSAGE");
+
+			$message_id = $this->db->insert_id();
+			return $message_id;
 		}
 
 
@@ -742,6 +745,12 @@
 
 		function getTypeById($type_id) {
 			$query = $this->db->query("SELECT TYPE_NAME FROM TYPE WHERE TYPE_ID = '$type_id'");
+			return $query->row_array();
+		}
+
+
+		function getLessonById($lesson_id) {
+			$query = $this->db->query("SELECT * FROM LESSON WHERE LESSON_ID = '$lesson_id'");
 			return $query->row_array();
 		}
 	}

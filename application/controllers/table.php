@@ -420,10 +420,28 @@
 					break;
 				}
 				case 1: case 3: {
-					$this->table->addMessage($user, $id, $text, $date, 'TEACHER', 'PUPIL');
+					$message_id = $this->table->addMessage($user, $id, $text, $date, 'TEACHER', 'PUPIL');
+
+					$json = array("ТекстСообщения" => $text, "ДатаСообщения" => $date, "УчительИд" => $user, "Ид" => $message_id, "ТипСообщения" => 1, "Прочтено" => 0);
+				    $this->_sendnotification($id, $json, "message");
+
 					break;
 				}
 			}
+
+
+
+				/*$subject = $this->table->getSubjectNameByLessonId($lesson_id)['SUBJECT_NAME'];
+				$type = $this->table->getTypeById($type)['TYPE_NAME'];
+				$message = "Новая оценка ".$mark." "."(".$type.")"." по предмету ".$subject;
+
+
+				$result = $this->table->getLessonById($lesson_id);
+				$lesson_date = $result['LESSON_DATE'];
+				$time_id = $result['TIME_ID'];
+				$day_of_week = date('N', strtotime($lesson_date));
+
+				$json = array("Текст" => $message, "День" => $lesson_date, "ВремяИд" => $time_id, "ДеньНедели" => $day_of_week);*/
 		}
 
 
@@ -510,7 +528,16 @@
 				$subject = $this->table->getSubjectNameByLessonId($lesson_id)['SUBJECT_NAME'];
 				$type = $this->table->getTypeById($type)['TYPE_NAME'];
 				$message = "Новая оценка ".$mark." "."(".$type.")"." по предмету ".$subject;
-				$this->_sendnotification($pupil_id, $message);
+
+
+				$result = $this->table->getLessonById($lesson_id);
+				$lesson_date = $result['LESSON_DATE'];
+				$time_id = $result['TIME_ID'];
+				$day_of_week = date('N', strtotime($lesson_date));
+
+				$json = array("Текст" => $message, "День" => $lesson_date, "ВремяИд" => $time_id, "ДеньНедели" => $day_of_week);
+
+				$this->_sendnotification($pupil_id, $json, "lesson");
 			}
 		}
 
@@ -524,14 +551,14 @@
 
 
 
-		function _sendnotification($pupil_id, $message) {
+		function _sendnotification($pupil_id, $message, $collapse_key) {
 			$apiKey = "AIzaSyAM-A6ttQQmkqllswtVu5eHQc01QmVq9gs";
 			$regIds = $this->table->getGCMIDs($pupil_id);
 
 			$regIdsArray = array();
 
 			foreach($regIds as $id) {
-			$regIdsArray[] = $id['GCM_USERS_REGID'];
+				$regIdsArray[] = $id['GCM_USERS_REGID'];
 			}
 
 
@@ -543,7 +570,8 @@
 
 		    $fields = array(
 		       'registration_ids' => $registrationIDs,
-		       'data' => array("message" => $message),
+		       'collapse_key' => $collapse_key,
+		       'data' => array("message" => json_encode($message, JSON_UNESCAPED_UNICODE)),
 		    );
 	 	    $headers = array(
 	 	        'Authorization: key=' . $apiKey,
@@ -571,9 +599,4 @@
 		}
 
 	}
-
-
-
-
-
 ?>

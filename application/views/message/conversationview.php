@@ -115,6 +115,7 @@
 					    console.log('Ошибка!' + xhr.status + ' ' + xhr.statusText);
 					},
 					success: function(response) {
+						//alert(response);
 						location.reload();
 				    }
 				});
@@ -180,6 +181,3 @@
 		});
     });
 </script>
-
-
-
