@@ -27,6 +27,7 @@
 		}
 	}
 ?>
+<script src="<?php echo base_url();?>bootstrap/js/jquery-2.1.1.min.js" type="text/javascript"></script>
 
 <div class="container">
 	<h3 class="sidebar-header"><i class="fa fa-envelope-o"></i> Общение</h3>
