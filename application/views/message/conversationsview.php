@@ -188,7 +188,7 @@
 					//alert(a);
 				}
 			});*/
-			document.location.href = '<?php  echo base_url(); ?>messages/conversation/'+ id;
+			window.location.href = '<?php  echo base_url(); ?>messages/conversation/'+ id;
 		});
     });
 </script>
