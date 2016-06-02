@@ -423,7 +423,9 @@
 					$message_id = $this->table->addMessage($user, $id, $text, $date, 'TEACHER', 'PUPIL');
 
 					$json = array("ТекстСообщения" => $text, "ДатаСообщения" => $date, "УчительИд" => $user, "Ид" => $message_id, "ТипСообщения" => 1, "Прочтено" => 0);
-				    $this->_sendnotification($id, $json, "message");
+
+					$this->load->library('gcm');
+				    $this->gcm->send($id, $json, "message");
 
 					break;
 				}
@@ -483,6 +485,21 @@
 			$period = $_POST['period'];
 			$class_id = $_POST['class_id'];
 			$this->table->changeProgress($pupil_id, $subject_id, $period, $class_id, $mark);
+
+
+			$this->load->library('gcm');
+			if($mark != "") {
+
+				$progress = $this->table->getPupilProgressMark($pupil_id, $subject_id, $period, $class_id, $mark);
+				$json = array("ПредметИд" => $subject_id, "Оценка" => $mark, "ПериодИд" => $progress['PERIOD_ID'], "Ид" => $progress['PROGRESS_ID']);
+
+				$this->gcm->send($pupil_id, $json, "progress");
+
+			} else {
+
+
+			}
+
 		}
 
 		function responselesson() {
@@ -537,7 +554,9 @@
 
 				$json = array("Текст" => $message, "День" => $lesson_date, "ВремяИд" => $time_id, "ДеньНедели" => $day_of_week);
 
-				$this->_sendnotification($pupil_id, $json, "lesson");
+
+				$this->load->library('gcm');
+				$this->gcm->send($pupil_id, $json, "lesson");
 			}
 		}
 
@@ -551,52 +570,6 @@
 
 
 
-		function _sendnotification($pupil_id, $message, $collapse_key) {
-			$apiKey = "AIzaSyAM-A6ttQQmkqllswtVu5eHQc01QmVq9gs";
-			$regIds = $this->table->getGCMIDs($pupil_id);
-
-			$regIdsArray = array();
-
-			foreach($regIds as $id) {
-				$regIdsArray[] = $id['GCM_USERS_REGID'];
-			}
-
-
-			// Replace with the real client registration IDs
-			$registrationIDs = $regIdsArray;
-
-			// Set POST variables
-		    $url = 'https://android.googleapis.com/gcm/send';
-
-		    $fields = array(
-		       'registration_ids' => $registrationIDs,
-		       'collapse_key' => $collapse_key,
-		       'data' => array("message" => json_encode($message, JSON_UNESCAPED_UNICODE)),
-		    );
-	 	    $headers = array(
-	 	        'Authorization: key=' . $apiKey,
-		        'Content-Type: application/json'
-		    );
-
-	 	    // Open connection
-			$ch = curl_init();
-
-		    // Set the URL, number of POST vars, POST data
-			curl_setopt( $ch, CURLOPT_URL, $url);
-		    curl_setopt( $ch, CURLOPT_POST, true);
-	        curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers);
-			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true);
-
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode( $fields));
-
-			// Execute post
-			$result = curl_exec($ch);
-
-			// Close connection
-			curl_close($ch);
-			echo $result;
-		}
 
 	}
 ?>

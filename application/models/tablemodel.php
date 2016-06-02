@@ -753,4 +753,14 @@
 			$query = $this->db->query("SELECT * FROM LESSON WHERE LESSON_ID = '$lesson_id'");
 			return $query->row_array();
 		}
+
+
+		function getPupilProgressMark($pupil_id, $subject_id, $period, $class_id, $mark) {
+			$query = $this->db->query("SELECT PROGRESS_ID, p.PERIOD_ID
+			FROM PROGRESS p JOIN PERIOD pe ON p.PERIOD_ID = pe.PERIOD_ID
+			WHERE PUPIL_ID =  '$pupil_id' AND SUBJECTS_CLASS_ID = '$subject_id' AND PERIOD_NAME = '$period'
+			AND YEAR_ID = (SELECT YEAR_ID FROM CLASS WHERE CLASS_ID = '$class_id')");
+
+			return $query->row_array();
+		}
 	}

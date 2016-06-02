@@ -4,7 +4,7 @@
 		public function __construct() {
             parent::__construct();
             $this->load->model('teachermodel', 'teacher');
-             $this->load->model('tablemodel', 'table');
+             $this->load->model('tablemodel', 'tablemodel');
         }
 
 		function _remap($method, $params = array())
@@ -172,9 +172,9 @@
 				$birthday = $_POST['inputBirthday'];
 				$class_id = $this->session->userdata('class_id');
 				if(isset($id)) {
-					$this->table->updatePupil($id, $name, $password, $login, $status, md5($password), $address, $phone, $birthday);
+					$this->tablemodel->updatePupil($id, $name, $password, $login, $status, md5($password), $address, $phone, $birthday);
 				} else {
-					$this->table->addPupil($name, $password, $login, $status, md5($password), $address, $phone, $birthday, $class_id);
+					$this->tablemodel->addPupil($name, $password, $login, $status, md5($password), $address, $phone, $birthday, $class_id);
 				}
 				redirect(base_url()."teacher/pupils");
 			} else {
@@ -274,9 +274,9 @@
 				$subject = $_POST['inputSubject'];
 				$class_id = $login = $this->session->userdata('class_id');
 				if(isset($id)) {
-					$this->table->updateSubjectsClass($id, $teacher, $subject, $class_id);
+					$this->tablemodel->updateSubjectsClass($id, $teacher, $subject, $class_id);
 				} else {
-					$this->table->addSubjectsClass($teacher, $subject, $class_id);
+					$this->tablemodel->addSubjectsClass($teacher, $subject, $class_id);
 				}
 				redirect(base_url()."teacher/subjects");
 			} else {
@@ -325,9 +325,9 @@
 				$subject = $_POST['inputSubject'];
 				$room = $_POST['inputRoom'];
 				if(isset($id)) {
-					$this->table->updateTimetable($id, $time, $subject, $day, $room);
+					$this->tablemodel->updateTimetable($id, $time, $subject, $day, $room);
 				} else {
-					$this->table->addTimetable($time, $subject, $day, $room);
+					$this->tablemodel->addTimetable($time, $subject, $day, $room);
 				}
 				redirect(base_url()."teacher/timetable/".$day);
 			} else {
@@ -550,8 +550,7 @@
 			$ext = substr($file['name'], 1 + strrpos($file['name'], "."));
 			$size = $file['size'];
 			$name =  preg_replace("/\.[^.]+$/", "", $filename);
-			$this->load->model('tablemodel', 'table');
-			$file_id = $this->table->addFile($size, $ext, $name, $id);
+			$file_id = $this->tablemodel->addFile($size, $ext, $name, $id);
 
 			if(move_uploaded_file($file['tmp_name'], $dir.$file_id.".".$ext)) {
 				return $file_id;
@@ -589,12 +588,14 @@
 				$time = $_POST['inputTime'];
 				$homework = $_POST['inputHomework'];
 				$status = $_POST['inputStatus'];
-				$this->load->model('tablemodel', 'table');
+
 				if(isset($id)) {
-					$this->table->updateLesson($id, $subject, $theme, $date, $time, $homework, $status);
+					$this->tablemodel->updateLesson($id, $subject, $theme, $date, $time, $homework, $status);
 				} else {
-					$id = $this->table->addLesson($subject, $theme, $date, $time, $homework, $status);
+					$id = $this->tablemodel->addLesson($subject, $theme, $date, $time, $homework, $status);
 				}
+
+				//$this->load->library('../controllers/table');
 
 				//загружаем файлы
 				/*if(isset($_FILES['inputFile1']) && $_FILES['inputFile1']['error'] == 0) {
@@ -995,9 +996,21 @@
 				$text = $_POST['inputText'];
 				$date = $_POST['inputDate'];
 				if(isset($id)) {
-					$this->table->updateNews($id, $theme, $date, $text, $teacher);
+					$this->tablemodel->updateNews($id, $theme, $date, $text, $teacher);
 				} else {
-					$this->table->addNews($theme, $date, $text, $teacher);
+					$this->tablemodel->addNews($theme, $date, $text, $teacher);
+
+
+					//news push
+					$this->load->library('gcm');
+					$json = array("Тема" => $theme);
+					$pupils = $this->teacher->getPupilsFromAllClasses();
+
+					foreach($pupils as $pupil) {
+						$this->gcm->send($pupil['PUPIL_ID'], $json, "news");
+				    }
+				    //-----
+
 				}
 				redirect(base_url()."teacher/news");
 			} else {

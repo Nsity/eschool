@@ -18,6 +18,14 @@
 			return $query->result_array();
 		}
 
+
+
+		function getPupilsFromAllClasses() {
+			$query = $this->db->query("SELECT *
+			FROM PUPIL");
+			return $query->result_array();
+		}
+
 		function totalPupils($class, $search) {
 			$query = $this->db->query("SELECT *
 			FROM PUPIL p JOIN PUPILS_CLASS pc ON p.PUPIL_ID = pc.PUPIL_ID
