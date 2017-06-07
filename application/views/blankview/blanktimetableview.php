@@ -1,4 +1,3 @@
-<script src="<?php echo base_url();?>bootstrap/js/jquery-2.1.1.min.js" type="text/javascript"></script>
 <div class="container">
 		<div class="panel panel-default">
 			<div class="panel-heading"><?php echo $title; ?></div>
