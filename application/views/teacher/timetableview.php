@@ -1,6 +1,7 @@
 <?php
 	$days = array("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
 	 ?>
+<script src="<?php echo base_url();?>bootstrap/js/jquery-2.1.1.min.js" type="text/javascript"></script>
 <div class="container">
 	<div class="row" style="margin-bottom: 20px;">
 		<div class="col-md-6">
