@@ -15,7 +15,8 @@
     <link rel="shortcut icon" href="<?php echo base_url();?>images/school-new2.png">
     <title>Электронный дневник учащегося</title>
     <!--Bootstrap-->
-
+    
+    <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
     <script src="<?php echo base_url();?>bootstrap/js/jquery-2.1.1.min.js" type="text/javascript"></script>
     <script src="<?php echo base_url();?>bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="<?php echo base_url();?>js/Chart.min.js" type="text/javascript"></script>
