@@ -28,7 +28,7 @@
     <script src="<?php echo base_url();?>js/bootstrap-datepicker.min.js" type="text/javascript"></script>
     <script src="<?php echo base_url();?>js/bootstrap-datepicker.ru.min.js" type="text/javascript"></script>
     <script src="<?php echo base_url();?>js/select2.min.js" type="text/javascript"></script>
-    <script src="<?php echo base_url();?>js/ru.js" type="text/javascript"></script>
+	<!--<script src="<?php echo base_url();?>js/ru.js" type="text/javascript"></script>-->
     <script src="<?php echo base_url();?>js/mindmup-editabletable.js" type="text/javascript"></script>
     <!--<script src="<?php echo base_url();?>js/bootstrap-editable.min.js" type="text/javascript"></script>-->
     <script type="text/javascript" src="<?php echo base_url();?>js/bootstrap-switch.min.js"></script>
