@@ -40,9 +40,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | 				 Sites using Latin-1 or UTF-8 database character set and collation are unaffected.
 |	['swap_pre'] A default table prefix that should be swapped with the dbprefix
 |	['encrypt']  Whether or not to use an encrypted connection.
+|
+|			'mysql' (deprecated), 'sqlsrv' and 'pdo/sqlsrv' drivers accept TRUE/FALSE
+|			'mysqli' and 'pdo/mysql' drivers accept an array with the following options:
+|
+|				'ssl_key'    - Path to the private key file
+|				'ssl_cert'   - Path to the public key certificate file
+|				'ssl_ca'     - Path to the certificate authority file
+|				'ssl_capath' - Path to a directory containing trusted CA certificates in PEM format
+|				'ssl_cipher' - List of *allowed* ciphers to be used for the encryption, separated by colons (':')
+|				'ssl_verify' - TRUE/FALSE; Whether verify the server certificate or not
+|
 |	['compress'] Whether or not to use client compression (MySQL only)
 |	['stricton'] TRUE/FALSE - forces 'Strict Mode' connections
 |							- good for ensuring strict SQL while developing
+|	['ssl_options']	Used to set various SSL options that can be used when making SSL connections.
 |	['failover'] array - A array with 0 or more data for connections if the main should fail.
 |	['save_queries'] TRUE/FALSE - Whether to "save" all executed queries.
 | 				NOTE: Disabling this will also effectively disable both
@@ -58,18 +70,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | The $query_builder variables lets you determine whether or not to load
 | the query builder class.
 */
-
-
-
 $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'us-cdbr-azure-east-a.cloudapp.net',
-	'username' => 'bb15d7452089ef',
-	'password' => '6b582839',
-	'database' => 'acsm_b1db89b5cc641ae',
+	'hostname' => 'localhost',
+	'username' => 'root',
+	'password' => 'root',
+	'database' => 'eschool',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
