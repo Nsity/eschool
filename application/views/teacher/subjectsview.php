@@ -50,7 +50,7 @@
 	</div>
 	<?php echo $this->pagination->create_links(); ?>
 		<?php
-		if(count($subjects) == 0 && isset($search) && $search != "") {
+		if(is_array($subjects) && count($subjects) == 0 && isset($search) && $search != "") {
 	?>
 	<div class="alert alert-info" role="alert">Поиск не дал результатов. Попробуйте другой запрос</div>
 	<?php } ?>

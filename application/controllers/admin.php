@@ -132,7 +132,7 @@
 			$this->pagination->initialize($config);
 
 			$query = $this->admin->getTeachers($num, $offset * $num - $num, $search);
-			$data['teachers'] = null;
+			$data['teachers'] = array();
 			if($query) {
 				$data['teachers'] =  $query;
 			}
@@ -170,7 +170,7 @@
 
 			$this->pagination->initialize($config);
 			$query = $this->admin->getClasses($num, $offset * $num - $num, $search);
-			$data['classes'] = null;
+			$data['classes'] = array();
 			if($query) {
 				$data['classes'] =  $query;
 			}
@@ -209,7 +209,7 @@
 
 			$this->pagination->initialize($config);
 			$query = $this->admin->getSubjects($num, $offset * $num - $num, $search);
-			$data['subjects'] = null;
+			$data['subjects'] = array();
 			if($query) {
 				$data['subjects'] =  $query;
 			}
@@ -338,7 +338,7 @@
 			$this->pagination->initialize($config);
 
 			$query = $this->admin->getRooms($num, $offset * $num - $num, $search);
-			$data['rooms'] = null;
+			$data['rooms'] = array();
 			if($query) {
 				$data['rooms'] =  $query;
 			}
@@ -377,7 +377,7 @@
 			$this->pagination->initialize($config);
 
 			$query = $this->admin->getTypes($num, $offset * $num - $num, $search);
-			$data['types'] = null;
+			$data['types'] = array();
 			if($query) {
 				$data['types'] =  $query;
 			}
@@ -417,7 +417,7 @@
 			$this->pagination->initialize($config);
 
 			$query = $this->admin->getNews($num, $offset * $num - $num, $id, $search);
-			$data['news'] = null;
+			$data['news'] = array();
 			if($query) {
 				$data['news'] =  $query;
 			}
@@ -574,7 +574,7 @@
 			$this->pagination->initialize($config);
 
 			$query = $this->admin->getYearsLimit($num, $offset * $num - $num);
-			$data['periods'] = null;
+			$data['periods'] = array();
 			if($query) {
 				$data['periods'] =  $query;
 			}

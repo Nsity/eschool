@@ -28,13 +28,13 @@
 
 	<ul class="pager" id="diary-navigation">
 		<li class="previous" title="Назад на одну неделю">
-		    <a href="<?php echo base_url();?>pupil/diary/<?php echo date('Y-m-d', strtotime($monday . ' - 7 day')); ?>"><i class="fa fa-chevron-left"></i> Назад</a>
+			<a href="<?php echo base_url();?>pupil/diary/<?php echo date('Y-m-d', strtotime($monday . ' - 7 day')); ?>"><i class="fa fa-chevron-left"></i> Назад</a>
 		</li>
 		<li title="Показать текущую неделю">
-				    <a href="<?php echo base_url();?>pupil/diary/<?php echo date('Y-m-d', strtotime(date('Y-m-d'). " - " . (date('N', strtotime(date('Y-m-d'))) - 1) . " days"));  ?>">Текущая неделя</a>
+					<a href="<?php echo base_url();?>pupil/diary/<?php echo date('Y-m-d', strtotime(date('Y-m-d'). " - " . (date('N', strtotime(date('Y-m-d'))) - 1) . " days"));  ?>">Текущая неделя</a>
 		</li>
 		<li class="next"  title="Вперед на одну неделю">
-		    <a href="<?php echo base_url();?>pupil/diary/<?php echo date('Y-m-d', strtotime($monday . ' + 7 day'));?>">Вперед <i class="fa fa-chevron-right"></i></a>
+			<a href="<?php echo base_url();?>pupil/diary/<?php echo date('Y-m-d', strtotime($monday . ' + 7 day'));?>">Вперед <i class="fa fa-chevron-right"></i></a>
 		</li>
 	</ul>
 
@@ -46,21 +46,22 @@
 			<?
 		} else {
 	?>
-	    <?php
-			    $date = $monday;
-			    for($i = 1; $i <= count($diary); $i++) {
-			    ?>
+		<?php
+			$date = $monday;
+			if(is_array($diary)) {
+			for($i = 1; $i <= count($diary); $i++) {
+		?>
 	<h4 class="sidebar-header"><?php
-	    echo $days[$i-1]. " ";
+		echo $days[$i-1]. " ";
 		echo showDate($date);
 		$date = date('Y-m-d', strtotime($date . ' + 1 day'));?>
 	</h4>
 	<div class="panel panel-default">
-	    <div class="table-responsive">
-  	        <table class="table table-striped table-hover table-bordered">
-			    <thead>
-	    			<tr>
-			    		<th style="width: 20%;">Предмет</th>
+		<div class="table-responsive">
+			<table class="table table-striped table-hover table-bordered">
+				<thead>
+					<tr>
+						<th style="width: 20%;">Предмет</th>
 						<th style="width: 25%;">Оценки</th>
 						<th style="width: 15%;">Домашнее задание</th>
 						<th style="width: 25%;">Замечания</th>
@@ -77,7 +78,7 @@
 										case 'у':?><tr class="info"><?php break;
 									}
 								} else {
-			      ?><tr><?php } ?>
+				  ?><tr><?php } ?>
 							<td><?php echo $diary[$i][$y]["subject"]; ?></td>
 							<td>
 								<?php
@@ -87,19 +88,19 @@
 											echo " ";
 										}
 									}
-							    ?>
+								?>
 							</td>
-						    <td><?php if (isset($diary[$i][$y]["homework"])) {
-							    ?>
-							    <?php if(isset($diary[$i][$y]['homework']) && ($diary[$i][$y]['homework'] != "" /*|| count($diary[$i][$y]['files']) > 0*/)) {?>
-							    <button class="btn btn-sample btn-xs" title="Показать домашнее задание" type="button" data-toggle="modal" data-target="#myModal<?php echo $diary[$i][$y]["lesson_id"];?>"><i class="fa fa-home"></i> Домашнее задание
-							    </button>
-							    <div class="modal fade" id="myModal<?php echo $diary[$i][$y]["lesson_id"];?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-								    <div class="modal-dialog">
-									    <div class="modal-content">
-										    <div class="modal-header">
-											    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-											    <h4 class="modal-title" id="myModalLabel">Домашнее задание по предмету <strong><?php echo $diary[$i][$y]["subject"]; ?></strong></h4>
+							<td><?php if (isset($diary[$i][$y]["homework"])) {
+								?>
+								<?php if(isset($diary[$i][$y]['homework']) && ($diary[$i][$y]['homework'] != "" /*|| count($diary[$i][$y]['files']) > 0*/)) {?>
+								<button class="btn btn-sample btn-xs" title="Показать домашнее задание" type="button" data-toggle="modal" data-target="#myModal<?php echo $diary[$i][$y]["lesson_id"];?>"><i class="fa fa-home"></i> Домашнее задание
+								</button>
+								<div class="modal fade" id="myModal<?php echo $diary[$i][$y]["lesson_id"];?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+												<h4 class="modal-title" id="myModalLabel">Домашнее задание по предмету <strong><?php echo $diary[$i][$y]["subject"]; ?></strong></h4>
 											</div>
 											<div class="modal-body">
 												<?php echo $diary[$i][$y]['homework']; ?>
@@ -110,32 +111,34 @@
 										</div>
 									</div>
 								</div>
-							    <?php
-						    } }?>
-						    </td>
-						    <td><?php if (isset($diary[$i][$y]["note"])) { echo $diary[$i][$y]["note"]; }  ?></td>
-						    <td><?php
-							    if (isset($diary[$i][$y]["lesson_status"]) && $diary[$i][$y]["lesson_status"] == 1) echo "Проведен"; ?>
+								<?php
+							} }?>
+							</td>
+							<td><?php if (isset($diary[$i][$y]["note"])) { echo $diary[$i][$y]["note"]; }  ?></td>
+							<td><?php
+								if (isset($diary[$i][$y]["lesson_status"]) && $diary[$i][$y]["lesson_status"] == 1) echo "Проведен"; ?>
 							</td>
 						</tr>
-						    <?php
-									    }?>
-
+					<?php
+						}
+					?>
 				</tbody>
 			</table>
 		</div>
 	</div>
-		<?php }}?>
+	<?php 
+		}}}
+	?>
 
-    <ul class="pager" id="diary-navigation">
+	<ul class="pager" id="diary-navigation">
 		<li class="previous" title="Назад на одну неделю">
-		    <a href="<?php echo base_url();?>pupil/diary/<?php echo date('Y-m-d', strtotime($monday . ' - 7 day')); ?>"><i class="fa fa-chevron-left"></i> Назад</a>
+			<a href="<?php echo base_url();?>pupil/diary/<?php echo date('Y-m-d', strtotime($monday . ' - 7 day')); ?>"><i class="fa fa-chevron-left"></i> Назад</a>
 		</li>
 		<li title="Показать текущую неделю">
-				    <a href="<?php echo base_url();?>pupil/diary/<?php echo date('Y-m-d', strtotime(date('Y-m-d'). " - " . (date('N', strtotime(date('Y-m-d'))) - 1) . " days"));  ?>">Текущая неделя</a>
+					<a href="<?php echo base_url();?>pupil/diary/<?php echo date('Y-m-d', strtotime(date('Y-m-d'). " - " . (date('N', strtotime(date('Y-m-d'))) - 1) . " days"));  ?>">Текущая неделя</a>
 		</li>
 		<li class="next"  title="Вперед на одну неделю">
-		    <a href="<?php echo base_url();?>pupil/diary/<?php echo date('Y-m-d', strtotime($monday . ' + 7 day'));?>">Вперед <i class="fa fa-chevron-right"></i></a>
+			<a href="<?php echo base_url();?>pupil/diary/<?php echo date('Y-m-d', strtotime($monday . ' + 7 day'));?>">Вперед <i class="fa fa-chevron-right"></i></a>
 		</li>
 	</ul>
 

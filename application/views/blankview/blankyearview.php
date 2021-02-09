@@ -91,7 +91,6 @@
 		$('#inputYearStart').datepicker({
 			format: 'yyyy-mm-dd',
 			startDate: "1993-01-01",
-		    endDate: "2020-01-01",
 		    language: "ru",
 		    todayBtn: "linked",
 		    autoclose: true,
@@ -100,7 +99,6 @@
 		$('#inputYearFinish').datepicker({
 			format: 'yyyy-mm-dd',
 			startDate: "1993-01-01",
-		    endDate: "2020-01-01",
 		    language: "ru",
 		    todayBtn: "linked",
 		    autoclose: true,
@@ -109,7 +107,6 @@
 		$('#inputFirstFinish').datepicker({
 			format: 'yyyy-mm-dd',
 			startDate: "1993-01-01",
-		    endDate: "2020-01-01",
 		    language: "ru",
 		    todayBtn: "linked",
 		    autoclose: true,
@@ -118,7 +115,6 @@
 		$('#inputSecondStart').datepicker({
 			format: 'yyyy-mm-dd',
 			startDate: "1993-01-01",
-		    endDate: "2020-01-01",
 		    language: "ru",
 		    todayBtn: "linked",
 		    autoclose: true,
@@ -127,7 +123,6 @@
 		$('#inputSecondFinish').datepicker({
 			format: 'yyyy-mm-dd',
 			startDate: "1993-01-01",
-		    endDate: "2020-01-01",
 		    language: "ru",
 		    todayBtn: "linked",
 		    autoclose: true,
@@ -136,7 +131,6 @@
 		$('#inputThirdStart').datepicker({
 			format: 'yyyy-mm-dd',
 			startDate: "1993-01-01",
-		    endDate: "2020-01-01",
 		    language: "ru",
 		    todayBtn: "linked",
 		    autoclose: true,
@@ -145,7 +139,6 @@
 		$('#inputThirdFinish').datepicker({
 			format: 'yyyy-mm-dd',
 			startDate: "1993-01-01",
-		    endDate: "2020-01-01",
 		    language: "ru",
 		    todayBtn: "linked",
 		    autoclose: true,
@@ -154,7 +147,6 @@
 		$('#inputForthStart').datepicker({
 			format: 'yyyy-mm-dd',
 			startDate: "1993-01-01",
-		    endDate: "2020-01-01",
 		    language: "ru",
 		    todayBtn: "linked",
 		    autoclose: true,

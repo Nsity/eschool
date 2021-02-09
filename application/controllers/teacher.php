@@ -106,7 +106,7 @@
 
 			$this->pagination->initialize($config);
 			$query = $this->teacher->getPupils($num, $offset * $num - $num, $class_id, $search);
-			$data['pupils'] = null;
+			$data['pupils'] = array();
 			if($query) {
 				$data['pupils'] =  $query;
 			}
@@ -258,7 +258,7 @@
 			}
 			$this->pagination->initialize($config);
 			$query = $this->teacher->getSubjectsClass($num, $offset * $num - $num, $class_id, $search);
-			$data['subjects'] = null;
+			$data['subjects'] = array();
 			if($query) {
 				$data['subjects'] =  $query;
 			}
@@ -692,7 +692,7 @@
 					$data['progress'] = $result;
 					$data['average'] = $average;
 				} else {
-					$data['progress'] = null;
+					$data['progress'] = array();
 				}
 				$data['subjects'] = $subjects;
 				$this->load->view("teacher/classreportview", $data);
@@ -981,7 +981,7 @@
 			$this->pagination->initialize($config);
 
 			$query = $this->teacher->getNews($num, $offset * $num - $num, $id, $search);
-			$data['news'] = null;
+			$data['news'] = array();
 			if($query) {
 				$data['news'] =  $query;
 			}
