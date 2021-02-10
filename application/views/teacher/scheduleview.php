@@ -4,25 +4,22 @@
 		<div class="row">
 		<?php
 			$days = array("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
-			for($i = 1; $i <= 6; $i++) :
+			for($i = 1; $i <= count($days); $i++) :
 		?>
 			<div class="col-md-2">
-		<?php echo "<strong>".$days[$i-1]."</strong></br>";?>
+			
+			<?php echo "<strong>".$days[$i-1]."</strong></br>";?>
 
-			<?php if(empty($timetable[$i])) : ?>
+			<?php if(!array_key_exists($i, $timetable)) : ?>
 				<span style="font-size: 10px; "><?php echo "Занятий нет"; ?></span>
-			<? else : ?>
-				<?php
-					for($y = 1; $y < 10; $y++) :
-						if(!isset($timetable[$i][$y]['subject'])) {
-							continue;
-						}
-				?>
-					<span style="font-size: 10px;"><?php echo $timetable[$i][$y]['time']; ?></span>
+			<?php else: ?>
+				<?php foreach ($timetable[$i] as $timetableforDay) : ?>
+					<span style="font-size: 10px;"><?php echo $timetableforDay['time']; ?></span>
 					<?php echo " "; ?>
-					<span style="font-size: 10px;"><?php echo $timetable[$i][$y]['subject']."</br>"; ?></span>
-				<?php endfor; ?>
+					<span style="font-size: 10px;"><?php echo $timetableforDay['subject']."</br>"; ?></span>
+				<?php endforeach; ?>
 			<?php endif; ?>
+
 			</div>
 		<?php endfor; ?>
 		</div>

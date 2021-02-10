@@ -126,7 +126,7 @@
 				$subject_id = $subject["SUBJECTS_CLASS_ID"];
 				$marks =  $this->teacher->getPupilMarksForSubject($id, $subject_id, $start, $finish);
 				if(count($marks) == 0) {
-					$result[$i]["marks"] = null;
+					$result[$i]["marks"] = array();
 				} else {
 					$z = 0;
 					foreach($marks as $mark) {
@@ -722,7 +722,7 @@
 							$z++;
 						}
 					} else {
-						$result[$i]["lessons"][$y]["marks"] = null;
+						$result[$i]["lessons"][$y]["marks"] = array();
 					}
 
 					$pass = $this->teacher->getPupilPassForLesson($pupil_id, $lesson_id);
@@ -792,7 +792,7 @@
 				$this->pagination->initialize($config);
 
 				$data['result'] = $this->_getJournal($class_id, $lessons);
-				$this->load->view("teacher/journalview" ,$data);
+				$this->load->view("teacher/journalview", $data);
 
 			}
 		}
@@ -814,7 +814,7 @@
 				$result[$i]['pupil_name'] = $pupil['PUPIL_NAME'];
 				$marks = $this->teacher->getPupilMarksForLesson($pupil_id, $lesson);
 				if(count($marks) == 0) {
-					$result[$i]['marks'] = null;
+					$result[$i]['marks'] = array();
 				}  else {
 					$y = 0;
 					foreach($marks as $mark) {
@@ -946,7 +946,6 @@
 					}
 				}
 			}
-			//print_r($result);
 			$data['timetable'] = $result;
 			$this->load->view("teacher/scheduleview", $data);
 		}
