@@ -35,10 +35,9 @@
 
 
 		function totalMessages($id, $from, $to, $search) {
-			$query = $this->db->query("SELECT *
+			$query = $this->db->query("SELECT COUNT(*)
 			FROM ".$from."S_MESSAGE pm JOIN MESSAGE m ON m.MESSAGE_ID = pm.MESSAGE_ID LEFT JOIN ".$to." t ON t.".$to."_ID = pm.".$to."_ID
-			WHERE ".$from."_ID = '$id' AND IFNULL(".$to."_NAME, '') LIKE '%$search%'
-			GROUP BY pm.".$to."_ID");
+			WHERE ".$from."_ID = '$id' AND IFNULL(".$to."_NAME, '') LIKE '%$search%'");
 			return $query->num_rows();
 		}
 

@@ -10,6 +10,7 @@
 		public function __construct() {
             parent::__construct();
             $this->load->model('pupilmodel', 'pupil');
+            $this->load->library("roleenum");
 
             $this->pupil_role = $this->session->userdata('role');
             $this->pupil_login = $this->session->userdata('login');
@@ -17,12 +18,12 @@
             $this->pupil_class = $this->session->userdata('class_id');
         }
 
-		function _remap($method, $params = array())
-		{
+		function _remap($method, $params = array()) {
 			$login = $this->pupil_login; //$this->session->userdata('login');
 			$role = $this->pupil_role;  //$this->session->userdata('role');
+			$roleEnum = $this->roleenum;
 
-			if(isset($login) && isset($role) && $role == "4") {
+			if(isset($login) && isset($role) && $role == $roleEnum::Pupil) {
 				$data['role'] = $role;
 				$data['mainlogin'] = $login;
 
@@ -555,7 +556,7 @@
 				$subject_id = $subject["SUBJECTS_CLASS_ID"];
 				$marks =  $this->pupil->getMarksForSubject($id, $subject_id, $start, $finish);
 				if(count($marks) == 0) {
-					$result[$i]["marks"] = null;
+					$result[$i]["marks"] = array();
 				} else {
 					$z = 0;
 					foreach($marks as $mark) {

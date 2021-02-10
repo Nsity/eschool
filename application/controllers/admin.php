@@ -9,6 +9,7 @@
             parent::__construct();
             $this->load->model('adminmodel', 'admin');
             $this->load->model('tablemodel', 'table');
+            $this->load->library("roleenum");
 
             $this->admin_role = $this->session->userdata('role');
             $this->admin_login = $this->session->userdata('login');
@@ -18,8 +19,9 @@
 		function _remap($method, $params = array()) {
 			$login =  $this->admin_login; //$this->session->userdata('login');
 			$role = $this->admin_role; //$this->session->userdata('role');
+			$roleEnum = $this->roleenum;
 
-			if(isset($login) && isset($role) && $role == "2") {
+			if(isset($login) && isset($role) && $role == $roleEnum::Admin) {
 				switch($method) {
 					case 'teachers': {
 						$data['title'] = "Список учителей";

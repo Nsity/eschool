@@ -2,17 +2,19 @@
 	class Teacher extends CI_Controller {
 
 		public function __construct() {
-            parent::__construct();
-            $this->load->model('teachermodel', 'teacher');
-             $this->load->model('tablemodel', 'tablemodel');
-        }
+			parent::__construct();
+			$this->load->model('teachermodel', 'teacher');
+			$this->load->model('tablemodel', 'tablemodel');
+			$this->load->library("roleenum");
+		}
 
-		function _remap($method, $params = array())
-		{
+		function _remap($method, $params = array()) {
 			$login = $this->session->userdata('login');
 			$role = $this->session->userdata('role');
+			$roleEnum = $this->roleenum;
 
-			if(isset($login) && isset($role) && ($role == "1" || $role == "3")) {
+
+			if(isset($login) && isset($role) && ($role == $roleEnum::ClassTeacher || $role == $roleEnum::Teacher)) {
 				$data['role'] = $role;
 				$data['mainlogin'] = $login;
 
@@ -190,19 +192,19 @@
 							if(isset($_POST['period'])) {
 								$period = $_POST['period'];
 								redirect(base_url()."teacher/pupil/".$id."/progress/".$period);
-						    }
+							}
 
-						    foreach ($borders as $border) {
-							    if($period == $border['PERIOD_ID']) {
-								    $start = $border['PERIOD_START'];
-								    $finish = $border['PERIOD_FINISH'];
-							    }
-						    }
-						    //успеваемость учащегося
-						    $data['periods'] = $borders;
-						    $data['progress'] = $this->_getPupilProgress($id, $start, $finish);
-						    $data['name'] = $pupil['PUPIL_NAME'];
-						    $this->load->view("teacher/pupilprogressview", $data);
+							foreach ($borders as $border) {
+								if($period == $border['PERIOD_ID']) {
+									$start = $border['PERIOD_START'];
+									$finish = $border['PERIOD_FINISH'];
+								}
+							}
+							//успеваемость учащегося
+							$data['periods'] = $borders;
+							$data['progress'] = $this->_getPupilProgress($id, $start, $finish);
+							$data['name'] = $pupil['PUPIL_NAME'];
+							$this->load->view("teacher/pupilprogressview", $data);
 						}
 					} else {
 						//редактирование учащегося
@@ -216,12 +218,12 @@
 						$data['id'] = $pupil['PUPIL_ID'];
 						$data['title'] = 'Редактирование учащегося';
 						$this->load->view("blankview/blankpupilview", $data);
-			    	}
-	     	    } else {
-			    	//ошибка
-		         	$data['error'] = "Такого учащегося не существует. Вернитесь обратно";
-			    	$this->load->view("errorview", $data);
-			    }
+					}
+				} else {
+					//ошибка
+					$data['error'] = "Такого учащегося не существует. Вернитесь обратно";
+					$this->load->view("errorview", $data);
+				}
 			} else {
 				//добавление учащегося
 				$data['title'] = 'Добавление нового учащегося';
@@ -429,7 +431,7 @@
 						$start = $border["PERIOD_START"];
 						$finish = $border["PERIOD_FINISH"];
 						$resultArr[$i][$border['PERIOD_NAME']]["mark"] =
-						                    $this->teacher->getPupilProgressMark($pupil_id, $subject_id, $period_id)['MARK'];
+											$this->teacher->getPupilProgressMark($pupil_id, $subject_id, $period_id)['MARK'];
 						$average = $this->teacher->getAverageMarkForPupil($pupil_id, $subject_id, $start, $finish);
 						$resultArr[$i][$border['PERIOD_NAME']]["average"] = number_format($average['MARK'],1);
 					}
@@ -522,8 +524,8 @@
 
 			$this->pagination->initialize($config);
 			$query = $this->teacher->getLessons($num, $offset * $num - $num, $subject, $search);
-			$data['lessons'] = null;
-			$data['files'] = null;
+			$data['lessons'] = array();
+			$data['files'] = array();
 			$arrFiles = array();
 			if($query) {
 				$data['lessons'] =  $query;
@@ -539,8 +541,8 @@
 		}
 
 
-        function upload($file, $id) {
-	        //создаем папку для пользователя
+		function upload($file, $id) {
+			//создаем папку для пользователя
 			//$user = $login = $this->session->userdata('id');
 			$dir = "/Applications/MAMP/htdocs/ischool/files/";
 			/*if(!is_dir($dir)) {
@@ -558,13 +560,13 @@
 				return null;
 			}
 
-	        /*$filename = $file['tmp_name'];
-	        $ext = substr($file['name'], 1 + strrpos($file['name'], "."));
-	        if (filesize($filename) > $max_image_size) {
-		        $error = 'Error: File size > 64K.';
-		        } elseif (!in_array($ext, $valid_types)) {
-			       $error = 'Error: Invalid file type.';
-			    } else {
+			/*$filename = $file['tmp_name'];
+			$ext = substr($file['name'], 1 + strrpos($file['name'], "."));
+			if (filesize($filename) > $max_image_size) {
+				$error = 'Error: File size > 64K.';
+				} elseif (!in_array($ext, $valid_types)) {
+				   $error = 'Error: Invalid file type.';
+				} else {
 				&& ($size[1] < $max_image_height)) {
 				if (@move_uploaded_file($filename, "/www/htdocs/upload/")) {
 					echo 'File successful uploaded.';
@@ -575,7 +577,7 @@
 				echo 'Error: invalid image properties.';
 			}
 		}*/
-        }
+		}
 
 		function lesson($subject = null, $id = null) {
 			if(isset($_POST['save'])){
@@ -920,7 +922,7 @@
 				$borders = $this->teacher->getBorders($class_id);
 				$data['stat'] = $this->_getProgressStatistics($class_id, $subject_id, $borders);
 				$data['periods'] = $borders;
-			    $this->load->view("teacher/statisticsview", $data);
+				$this->load->view("teacher/statisticsview", $data);
 			}
 		}
 
@@ -935,7 +937,7 @@
 				$subjects = $this->teacher->getSubjectsForClass($class_id, $id);
 				foreach($subjects as $subject) {
 					$subject_id = $subject['SUBJECTS_CLASS_ID'];
-				    $timetable = $this->teacher->getTimetableForSubject($subject_id);
+					$timetable = $this->teacher->getTimetableForSubject($subject_id);
 					foreach($timetable as $row) {
 						$result[$row['DAYOFWEEK_ID']][$row['TIME_ID']]['subject'] = $subject['SUBJECT_NAME']." (".$class['CLASS_NUMBER']." ".$class['CLASS_LETTER'].")";
 						$result[$row['DAYOFWEEK_ID']][$row['TIME_ID']]['time'] = date('H:i', strtotime($row['TIME_START']));
@@ -1008,8 +1010,8 @@
 
 					foreach($pupils as $pupil) {
 						$this->gcm->send($pupil['PUPIL_ID'], $json, "news");
-				    }
-				    //-----
+					}
+					//-----
 
 				}
 				redirect(base_url()."teacher/news");
@@ -1018,21 +1020,21 @@
 					$teacher = $this->session->userdata('id');
 					$news = $this->teacher->getNewsById($id, $teacher);
 					if(isset($news)) {
-					    $data['date'] = $news['NEWS_TIME'];
-					    $data['id'] = $news['NEWS_ID'];
-					    $data['text'] = $news['NEWS_TEXT'];
-					    $data['theme'] = $news['NEWS_THEME'];
-					    $data['title'] = 'Редактирование новости';
-					    $this->load->view("blankview/blanknewsview", $data);
-				    } else {
+						$data['date'] = $news['NEWS_TIME'];
+						$data['id'] = $news['NEWS_ID'];
+						$data['text'] = $news['NEWS_TEXT'];
+						$data['theme'] = $news['NEWS_THEME'];
+						$data['title'] = 'Редактирование новости';
+						$this->load->view("blankview/blanknewsview", $data);
+					} else {
 					   //ошибка
-					    $data['error'] = "Такой новости не существует. Вернитесь обратно";
-					    $this->load->view("errorview", $data);
+						$data['error'] = "Такой новости не существует. Вернитесь обратно";
+						$this->load->view("errorview", $data);
 				}
-	            } else {
-		            $data['title'] = 'Добавление новой новости';
-				    $this->load->view("blankview/blanknewsview", $data);
-			    }
+				} else {
+					$data['title'] = 'Добавление новой новости';
+					$this->load->view("blankview/blanknewsview", $data);
+				}
 			}
 		}
 

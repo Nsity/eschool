@@ -173,7 +173,7 @@
 
 			$query = $this->message->getMessages($num, $offset * $num - $num, $id, $this->from, $this->to, $search);
 			$data['result'] = null;
-			$data['messages'] = null;
+			$data['messages'] = array();
 			if($query) {
 				$result = array();
 				$i = 0;
