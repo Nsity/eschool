@@ -39,22 +39,21 @@
 	</ul>
 
 	<?php
-
-		if (isset($error)) {
-			?>
+		if (isset($error)) : ?>
 			<div class="alert alert-info" role="alert"><?php echo $error;?></div>
-			<?
-		} else {
+	<?php else : ?>
+	<?php
+		$date = $monday;
+		if(is_array($diary)) :
+		for($i = 1; $i <= count($diary); $i++) :
 	?>
-		<?php
-			$date = $monday;
-			if(is_array($diary)) {
-			for($i = 1; $i <= count($diary); $i++) {
-		?>
-	<h4 class="sidebar-header"><?php
+	
+	<h4 class="sidebar-header">
+	<?php
 		echo $days[$i-1]. " ";
 		echo showDate($date);
-		$date = date('Y-m-d', strtotime($date . ' + 1 day'));?>
+		$date = date('Y-m-d', strtotime($date . ' + 1 day'));
+	?>
 	</h4>
 	<div class="panel panel-default">
 		<div class="table-responsive">
@@ -69,66 +68,68 @@
 					</tr>
 				</thead>
 				<tbody>
+				<?php
+					foreach ($diary[$i] as $diaryForDay) :
+						switch ($diaryForDay["pass"]) {
+							case 'н':?><tr class="warning"><?php break;
+							case 'б':?><tr class="success"><?php break;
+							case 'у':?><tr class="info"><?php break;
+							default:?><tr><?php break;
+						}
+			  	?>
+						<td><?php echo $diaryForDay["subject"]; ?></td>
+						<td>
 						<?php
-							for($y = 1; $y <= count($diary[$i]); $y++) {
-								if(isset($diary[$i][$y]["pass"])) {
-									switch ($diary[$i][$y]["pass"]) {
-										case 'н':?><tr class="warning"><?php break;
-										case 'б':?><tr class="success"><?php break;
-										case 'у':?><tr class="info"><?php break;
-									}
-								} else {
-				  ?><tr><?php } ?>
-							<td><?php echo $diary[$i][$y]["subject"]; ?></td>
-							<td>
-								<?php
-									if(isset($diary[$i][$y]["marks"])) {
-										for($z = 1; $z <= count($diary[$i][$y]["marks"]); $z++) {
-											setColor($diary[$i][$y]["marks"][$z]["mark"], $diary[$i][$y]["marks"][$z]["type"]);
-											echo " ";
-										}
-									}
-								?>
-							</td>
-							<td><?php if (isset($diary[$i][$y]["homework"])) {
-								?>
-								<?php if(isset($diary[$i][$y]['homework']) && ($diary[$i][$y]['homework'] != "" /*|| count($diary[$i][$y]['files']) > 0*/)) {?>
-								<button class="btn btn-sample btn-xs" title="Показать домашнее задание" type="button" data-toggle="modal" data-target="#myModal<?php echo $diary[$i][$y]["lesson_id"];?>"><i class="fa fa-home"></i> Домашнее задание
-								</button>
-								<div class="modal fade" id="myModal<?php echo $diary[$i][$y]["lesson_id"];?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-									<div class="modal-dialog">
-										<div class="modal-content">
-											<div class="modal-header">
-												<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-												<h4 class="modal-title" id="myModalLabel">Домашнее задание по предмету <strong><?php echo $diary[$i][$y]["subject"]; ?></strong></h4>
-											</div>
-											<div class="modal-body">
-												<?php echo $diary[$i][$y]['homework']; ?>
-											</div>
-											<div class="modal-footer">
-												<button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-											</div>
+							if(isset($diaryForDay["marks"])) {
+								foreach($diaryForDay["marks"] as $marks) {
+									setColor($marks["mark"], $marks["type"]);
+									echo " ";
+								}
+							}
+						?>
+						</td>
+						<td>
+						<?php if (isset($diaryForDay["homework"]) && ($diaryForDay['homework'] != "" /*|| count($diaryForDay['files']) > 0*/)) : ?>
+							<button class="btn btn-sample btn-xs" title="Показать домашнее задание" type="button" data-toggle="modal" data-target="#myModal<?php echo $diaryForDay["lesson_id"];?>"><i class="fa fa-home"></i> Домашнее задание
+							</button>
+							<div class="modal fade" id="myModal<?php echo $diaryForDay["lesson_id"];?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+											<h4 class="modal-title" id="myModalLabel">Домашнее задание по предмету <strong><?php echo $diaryForDay["subject"]; ?></strong></h4>
+										</div>
+										<div class="modal-body">
+											<?php echo $diaryForDay['homework']; ?>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
 										</div>
 									</div>
 								</div>
-								<?php
-							} }?>
-							</td>
-							<td><?php if (isset($diary[$i][$y]["note"])) { echo $diary[$i][$y]["note"]; }  ?></td>
-							<td><?php
-								if (isset($diary[$i][$y]["lesson_status"]) && $diary[$i][$y]["lesson_status"] == 1) echo "Проведен"; ?>
-							</td>
-						</tr>
-					<?php
-						}
-					?>
+							</div>
+						<?php endif; ?>
+						</td>
+						<td>
+							<?php echo $diaryForDay["note"]; ?>	
+						</td>
+						<td>
+						<?php
+							if (isset($diaryForDay["lesson_status"]) && $diaryForDay["lesson_status"] == 1) 
+								echo "Проведен"; 
+						?>
+						</td>
+					</tr>
+					<?php endforeach; ?>
 				</tbody>
 			</table>
 		</div>
 	</div>
-	<?php 
-		}}}
-	?>
+<?php 
+			endfor;
+		endif;
+	endif;
+?>
 
 	<ul class="pager" id="diary-navigation">
 		<li class="previous" title="Назад на одну неделю">

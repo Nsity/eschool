@@ -8,15 +8,15 @@
 		var $pupil_class = null;
 
 		public function __construct() {
-            parent::__construct();
-            $this->load->model('pupilmodel', 'pupil');
-            $this->load->library("roleenum");
+			parent::__construct();
+			$this->load->model('pupilmodel', 'pupil');
+			$this->load->library("roleenum");
 
-            $this->pupil_role = $this->session->userdata('role');
-            $this->pupil_login = $this->session->userdata('login');
-            $this->pupil_id = $this->session->userdata('id');
-            $this->pupil_class = $this->session->userdata('class_id');
-        }
+			$this->pupil_role = $this->session->userdata('role');
+			$this->pupil_login = $this->session->userdata('login');
+			$this->pupil_id = $this->session->userdata('id');
+			$this->pupil_class = $this->session->userdata('class_id');
+		}
 
 		function _remap($method, $params = array()) {
 			$login = $this->pupil_login; //$this->session->userdata('login');
@@ -200,7 +200,7 @@
 
 				//Расписание
 				$class_id = $this->pupil_class; //$this->session->userdata('class_id');
-			    $data['timetable'] = $this->_getTimetableForDay($class_id, $this->_dayOfWeek());
+				$data['timetable'] = $this->_getTimetableForDay($class_id, $this->_dayOfWeek());
 
 				$this->load->view('pupil/sidebarview', $data);
 				$this->load->view('pupil/postview', $data);
@@ -223,7 +223,7 @@
 				$diary[$i] = array();
 				$y = 1;
 				if (count($result) == 0) {
-					$diary[$i] = null;
+					$diary[$i] = array();
 				} else {
 					foreach ($result as $row) {
 						$diary[$i][$y] = array();
@@ -234,19 +234,19 @@
 
 						$lesson = $this->pupil->getLessonByDate($row['SUBJECTS_CLASS_ID'], $currentday, $time_id);
 						if (!isset($lesson)) {
-							$diary[$i][$y]["lesson_id"] = null;
-							/*$diary[$i][$y]["lesson_status"] = null;
-							$diary[$i][$y]["homework"] = null;
-							$diary[$i][$y]["files"] = null;
-							$diary[$i][$y]["marks"] = null;
-							$diary[$i][$y]["pass"] = null;*/
+							$diary[$i][$y]["lesson_id"] = 0;
+							$diary[$i][$y]["lesson_status"] = 0;
+							$diary[$i][$y]["homework"] = "";
+							$diary[$i][$y]["files"] = array();
+							$diary[$i][$y]["marks"] = array();
+							$diary[$i][$y]["pass"] = "";
+							$diary[$i][$y]["note"] = "";
 						} else {
 							$diary[$i][$y]["lesson_id"] = $lesson['LESSON_ID'];
 							$diary[$i][$y]["lesson_status"] = $lesson['LESSON_STATUS'];
 							if (isset($lesson['LESSON_HOMEWORK'])) {
 								$diary[$i][$y]["homework"] = $lesson['LESSON_HOMEWORK'];
-							}
-							else $diary[$i][$y]["homework"] = null;
+							} else $diary[$i][$y]["homework"] = null;
 							/*$files = $this->pupil->getFilesForHomework($lesson['LESSON_ID']);
 							$diary[$i][$y]["file"] = count($files);
 							if (count($files) > 0) {
@@ -256,54 +256,33 @@
 									$diary[$i][$y]["files"][$f]["name"] = $file['FILE_NAME'].".".$file['FILE_EXTENSION'];
 									$diary[$i][$y]["files"][$f]["path"] = base_url()."files/".$file['FILE_ID'].".".$file['FILE_EXTENSION'];
 									$f++;
-							    }
+								}
 							} else $diary[$i][$y]["files"] = null;*/
 
 							//получаем пропуск
 							$pass = $this->pupil->getPass($lesson['LESSON_ID'], $pupil_id);
-							if(isset($pass)) {
-								$diary[$i][$y]["pass"] = $pass['ATTENDANCE_PASS'];
-							} else {
-								$diary[$i][$y]["pass"] = null;
-							}
+							$diary[$i][$y]["pass"] =isset($pass) ? $pass['ATTENDANCE_PASS'] : "";
 
 							//получаем замечание
-							$note = $this->pupil->getNote($lesson['LESSON_ID'], $pupil_id);
-							if(isset($note)) {
-								$diary[$i][$y]["note"] = $note['NOTE_TEXT'];
-							} else {
-								$diary[$i][$y]["note"] = null;
-							}
+							$diary[$i][$y]["note"] = isset($note) ? $note['NOTE_TEXT'] : "";
 
 							//получаем оценки
 							$marks = $this->pupil->getMarks($lesson['LESSON_ID'], $pupil_id);
 							$diary[$i][$y]["marks"] = array();
 							$z = 1;
-							if (count($marks) == 0) {
-								$diary[$i][$y]["marks"] = null;
-							} else {
-								foreach ($marks as $mark) {
-									$diary[$i][$y]["marks"][$z]["mark"] = $mark['ACHIEVEMENT_MARK'];
-									$diary[$i][$y]["marks"][$z]["type"] = $mark['TYPE_NAME'];
-						 			$z++;
-						    	}
-					    	}
-					    }
-					    $y++;
-				    }
+							foreach ($marks as $mark) {
+								$diary[$i][$y]["marks"][$z]["mark"] = $mark['ACHIEVEMENT_MARK'];
+								$diary[$i][$y]["marks"][$z]["type"] = $mark['TYPE_NAME'];
+								$z++;
+							}
+						}
+						$y++;
+					}
 				}
 				$day = date('Y-m-d', strtotime($monday. ' + '.$i.' days'));
 			}
 
-			$s = 0;
-			for ($i = 1; $i <= 6; $i++) {
-				if ($diary[$i] != null) $s++;
-			}
-
-			if ($s > 0) {
-				return $diary;
-			}
-			else return null;
+			return $diary;
 		}
 
 		function diary($monday = null) {
@@ -321,24 +300,26 @@
 					$arr = $this->pupil->getClassByDate($pupil_id, $monday);
 					if (isset($arr)) {
 						$class_id = $arr['CLASS_ID'];
-					    $diary = $this->_getDiary($monday, $class_id);
+						$diary = $this->_getDiary($monday, $class_id);
 
-					    if (!$diary) {
-						    $data['error'] = "Учебных занятий нет";
-						    $data['diary'] = null;
-					    }
-					    else {
-						    $data['error'] = null;
-						    $data['diary'] = $diary;
+						if (!$diary) {
+							$data['error'] = "Учебных занятий нет";
+							$data['diary'] = array();
+						}
+						else {
+							$data['error'] = null;
+							$data['diary'] = $diary;
 						}
 					} else {
 						$data['error'] = "Каникулы";
 						$data['diary'] = null;
 					}
 
+					//print_r($data['diary']);
+
 					$data['monday'] = $monday;
 					$this->load->view('pupil/diaryview', $data);
-			    }
+				}
 				else {
 					$string_date = date('Y-m-d');
 					$day_of_week = date('N', strtotime($string_date));

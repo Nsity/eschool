@@ -49,7 +49,6 @@
 		$('#inputDate').datepicker({
 		    format: 'yyyy-mm-dd',
 		    startDate: "1993-01-01",
-		    endDate: "2020-01-01",
 		    language: "ru",
 		    todayBtn: "linked",
 		    autoclose: true,
