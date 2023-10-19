@@ -5,13 +5,13 @@
 		public function __construct() {
             parent::__construct();
             $this->load->model('messagemodel', 'message');
+            $this->load->library("roleenum");
         }
 
         var $from = null;
         var $to = null;
 
-		function _remap($method, $params = array())
-		{
+		function _remap($method, $params = array()) {
 			$login = $this->session->userdata('login');
 			$role = $this->session->userdata('role');
 
@@ -58,13 +58,12 @@
 				$this->load->view('header', $data);
 				//$this->load->view('message/messagemenuview');
 
-				if (method_exists($this, $method))
-				{
+				if (method_exists($this, $method)) {
 					call_user_func_array(array($this, $method), $params);
-				}
-				else {
+				} else {
 					redirect(base_url()."messages/conversations");
 				}
+				
 				$this->load->view('footer');
 			}
 			else {
@@ -156,6 +155,7 @@
 					} else redirect(base_url()."messages/conversations?search=".$search);
 				}
 			}
+			
 			if(isset($_GET['search'])) {
 				$search = $_GET['search'];
 				$data['search'] = $search;
@@ -230,6 +230,3 @@
 			$this->load->view('message/conversationview', $data);
 		}
 	}
-
-
-?>

@@ -1,4 +1,5 @@
 <?php
+
 	class Admin extends CI_Controller {
 
 		var $admin_role = null;
@@ -10,6 +11,7 @@
             $this->load->model('adminmodel', 'admin');
             $this->load->model('tablemodel', 'table');
             $this->load->library("roleenum");
+            //$this->load->library('javascript');
 
             $this->admin_role = $this->session->userdata('role');
             $this->admin_login = $this->session->userdata('login');
@@ -88,12 +90,11 @@
 				$data['role'] = $role;
 				$data['mainlogin'] = $login;
 				$this->load->view('header', $data);
-				if (method_exists($this, $method))
-				{
+				if (method_exists($this, $method)) {
 					call_user_func_array(array($this, $method), $params);
 				}
 				else {
-					redirect(base_url()."admin/teachers");
+					redirect(base_url() . "admin/teachers");
 				}
 				$this->load->view('footer');
 			}
@@ -768,5 +769,3 @@
 
 
 	}
-
-?>

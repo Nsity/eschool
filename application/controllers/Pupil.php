@@ -11,6 +11,7 @@
 			parent::__construct();
 			$this->load->model('pupilmodel', 'pupil');
 			$this->load->library("roleenum");
+			$this->load->library('javascript');
 
 			$this->pupil_role = $this->session->userdata('role');
 			$this->pupil_login = $this->session->userdata('login');
@@ -600,7 +601,3 @@
 			}
 		}
 	}
-
-
-
-	?>

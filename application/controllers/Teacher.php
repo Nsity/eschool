@@ -6,6 +6,7 @@
 			$this->load->model('teachermodel', 'teacher');
 			$this->load->model('tablemodel', 'tablemodel');
 			$this->load->library("roleenum");
+			//$this->load->library('javascript');
 		}
 
 		function _remap($method, $params = array()) {
