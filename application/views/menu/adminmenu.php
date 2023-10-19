@@ -1,12 +1,37 @@
+<?php 
+	$menu = array(
+		'admin/teachers' => array(
+			'icon' => 'fa-user',
+			'title' => 'Учителя',
+		),
+		'admin/classes' => array(
+			'icon' => 'fa-users',
+			'title' => 'Классы',
+		),
+		'admin/subjects' => array(
+			'icon' => 'fa-book',
+			'title' => 'Общие предметы',
+		),
+		'admin/rooms' => array(
+			'icon' => 'fa-building',
+			'title' => 'Кабинеты',
+		),
+		'admin/types' => array(
+			'icon' => 'fa-paperclip',
+			'title' => 'Типы оценок',
+		),
+		'admin/years' => array(
+			'icon' => 'fa-calendar',
+			'title' => 'Учебные годы',
+		),
+	);
+?>
 <li class="dropdown">
 	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Списки <span class="caret"></span></a>
 	<ul class="dropdown-menu" role="menu">
-		<li><a href="<?php echo base_url();?>admin/teachers"><i class="fa fa-user"></i> Учителя</a></li>
-		<li><a href="<?php echo base_url();?>admin/classes"><i class="fa fa-users"></i> Классы</a></li>
-		<li><a href="<?php echo base_url();?>admin/subjects"><i class="fa fa-book"></i> Общие предметы</a></li>
-		<li><a href="<?php echo base_url();?>admin/rooms"><i class="fa fa-building"></i> Кабинеты</a></li>
-		<li><a href="<?php echo base_url();?>admin/types"><i class="fa fa-paperclip"></i> Типы оценок</a></li>
-		<li><a href="<?php echo base_url();?>admin/years"><i class="fa fa-calendar"></i> Учебные годы</a></li>
+		<?php foreach($menu as $slug => $menuItem): ?>
+			<li><a href="<?php echo base_url() . $slug;?>"><i class="fa <?php echo $menuItem['icon']; ?>"></i> <?php echo $menuItem['title']; ?></a></li>
+		<?php endforeach; ?>
 	</ul>
 </li>
 <li><a href="<?php echo base_url();?>admin/news">Новости</a></li>

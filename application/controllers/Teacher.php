@@ -14,66 +14,37 @@
 			$role = $this->session->userdata('role');
 			$roleEnum = $this->roleenum;
 
-
-			if(isset($login) && isset($role) && ($role == $roleEnum::ClassTeacher || $role == $roleEnum::Teacher)) {
+			if(isset($login) && isset($role) && ($role == Roleenum::ClassTeacher || $role == Roleenum::Teacher)) {
 				$data['role'] = $role;
 				$data['mainlogin'] = $login;
 
+				$pageTitles = array(
+					'pupils' => "Список учащихся",
+					'subjects' => "Список предметов в классе",
+					'journal' => "Журнал",
+					'progress' => "Итоговые оценки",
+					'timetable' => "Расписание",
+					'lessons' => "Список учебных занятий",
+					'statistics' => "Статистика",
+					'pupil' => "Учащийся",
+					'subject' => "Предмет в классе",
+					'timetableitem' => "Предмет в расписании", 
+					'lesson' => "Учебное занятие",
+					'lessonpage' => "Учебное занятие",
+				);
 
-				switch($method) {
-					case 'pupils': {
-						$data['title'] = "Список учащихся";
-						break;
-					}
-					case 'subjects': {
-						$data['title'] = "Список предметов в классе";
-						break;
-					}
-					case 'journal': {
-						$data['title'] = "Журнал";
-						break;
-					}
-					case 'progress': {
-						$data['title'] = "Итоговые оценки";
-						break;
-					}
-					case 'timetable': {
-						$data['title'] = "Расписание";
-						break;
-					}
-					case 'lessons': {
-						$data['title'] = "Список учебных занятий";
-						break;
-					}
-					case 'statistics': {
-						$data['title'] = "Статистика";
-						break;
-					}
-					case 'pupil': {
-						$data['title'] = "Учащийся";
-						break;
-					}
-					case 'subject': {
-						$data['title'] = "Предмет в классе";
-						break;
-					}
-					case 'timetableitem': {
-						$data['title'] = "Предмет в расписании";
-						break;
-					}
-					case 'lesson': case 'lessonpage': {
-						$data['title'] = "Учебное занятие";
-						break;
-					}
+				if(array_key_exists($method, $pageTitles)) {
+					$data['title'] = $pageTitles[$method];
 				}
+
 				$this->load->view('header', $data);
-				if (method_exists($this, $method))
-				{
+				
+				if (method_exists($this, $method)) {
 					call_user_func_array(array($this, $method), $params);
-				}
-				else {
+				} else {
 					redirect(base_url()."teacher/journal");
 				}
+
 				$this->load->view('footer');
 			}
 			else {

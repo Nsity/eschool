@@ -20,104 +20,38 @@
 		}
 
 		function _remap($method, $params = array()) {
-			$login = $this->pupil_login; //$this->session->userdata('login');
-			$role = $this->pupil_role;  //$this->session->userdata('role');
+			$login = $this->pupil_login;
+			$role = $this->pupil_role;
 			$roleEnum = $this->roleenum;
 
-			if(isset($login) && isset($role) && $role == $roleEnum::Pupil) {
+			if(isset($login) && isset($role) && $role == Roleenum::Pupil) {
 				$data['role'] = $role;
 				$data['mainlogin'] = $login;
 
-				switch($method) {
-					case 'news': {
-						$data['title'] = "Новости";
-						break;
-					}
-					case 'timetable': {
-						$data['title'] = "Расписание";
-						break;
-					}
-					case 'diary': {
-						$data['title'] = "Дневник";
-						break;
-					}
-					case 'progress': {
-						$data['title'] = "Итоговые оценки";
-						break;
-					}
-					case 'message': {
-						$data['title'] = "Общение";
-						break;
-					}
-					case 'faq': {
-						$data['title'] = "Помощь";
-						break;
-					}
+				$pageTitles = array(
+					'news' => "Новости",
+					'timetable' => "Расписание",
+					'diary' => "Дневник",
+					'progress' => "Итоговые оценки",
+					'message' => "Общение", 
+					'statistics' => "Статистика",
+					'marks' => "Оценки",
+				);
 
-					case 'statistics': {
-						$data['title'] = "Статистика";
-						break;
-					}
-					case 'marks': {
-						$data['title'] = "Оценки";
-						break;
-					}
+				if(array_key_exists($method, $pageTitles)) {
+					$data['title'] = $pageTitles[$method];
 				}
 
-				/*$this->load->view('header', $data);
-				switch($method) {
-					case 'news': {
-						$this->news();
-						break;
-					}
-					case 'timetable': {
-						$this->timetable();
-						break;
-					}
-					case 'diary': {
-						$this->diary();
-						break;
-					}
-					case 'progress': {
-						$this->progress();
-						break;
-					}
-					case 'message': {
-						$this->message();
-						break;
-					}
-
-					case 'lesson': {
-						$this->lesson();
-						break;
-					}
-					case 'faq': {
-						$this->faq();
-						break;
-					}
-
-					case 'statistics': {
-						$this->statistics();
-						break;
-					}
-					default: {
-						redirect('pupil/news');
-						break;
-					}
-
-				}
-				$this->load->view('footer');*/
 				$this->load->view('header', $data);
-				if (method_exists($this, $method))
-				{
+				
+				if (method_exists($this, $method)) {
 					call_user_func_array(array($this, $method), $params);
-				}
-				else {
+				} else {
 					redirect("pupil/news");
 				}
+
 				$this->load->view('footer');
-			}
-			else {
+			} else {
 				redirect('auth/logout');
 			}
 
@@ -522,12 +456,6 @@
 			}
 
 		}
-
-
-		function faq() {
-			$this->load->view("faqview");
-		}
-
 
 		private function _getPupilMarks($id, $start, $finish, $class_id) {
 			$result = array();

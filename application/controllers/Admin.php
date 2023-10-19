@@ -19,86 +19,46 @@
         }
 
 		function _remap($method, $params = array()) {
-			$login =  $this->admin_login; //$this->session->userdata('login');
-			$role = $this->admin_role; //$this->session->userdata('role');
+			$login =  $this->admin_login; 
+			$role = $this->admin_role; 
 			$roleEnum = $this->roleenum;
 
-			if(isset($login) && isset($role) && $role == $roleEnum::Admin) {
-				switch($method) {
-					case 'teachers': {
-						$data['title'] = "Список учителей";
-						break;
-					}
-					case 'news': {
-						$data['title'] = "Список новостей";
-						break;
-					}
-					case 'types': {
-						$data['title'] = "Список типов оценок";
-						break;
-					}
-					case 'classes': {
-						$data['title'] = "Список классов";
-						break;
-					}
-					case 'rooms': {
-						$data['title'] = "Список кабинетов";
-						break;
-					}
-					case 'subjects': {
-						$data['title'] = "Список общих предметов";
-						break;
-					}
-					case 'years': {
-						$data['title'] = "Список учебных годов";
-						break;
-					}
-					case 'teacher': {
-						$data['title'] = "Учитель";
-						break;
-					}
-					case 'newsitem': {
-						$data['title'] = "Новость";
-						break;
-					}
-					case 'subject': {
-						$data['title'] = "Общий предмет";
-						break;
-					}
-					case 'room': {
-						$data['title'] = "Кабинет";
-						break;
-					}
-					case 'classitem': {
-						$data['title'] = "Класс";
-						break;
-					}
-					case 'type': {
-						$data['title'] = "Тип оценки";
-						break;
-					}
-					case 'year': {
-						$data['title'] = "Учебный год";
-						break;
-					}
-					case 'statistics': {
-						$data['title'] = "Анализ";
-						break;
-					}
+			if(isset($login) && isset($role) && $role == Roleenum::Admin) {
+
+				$pageTitles = array(
+					'teachers' => "Список учителей",
+					'news' => "Список новостей",
+					'types' => "Список типов оценок",
+					'classes' => "Список классов",
+					'rooms' => "Список кабинетов",
+					'subjects' => "Список общих предметов",
+					'years' => "Список учебных годов",
+					'teacher' => "Учитель",
+					'newsitem' => "Новость",
+					'subject' => "Общий предмет",
+					'room' => "Кабинет",
+					'classitem' => "Класс",
+					'type' => "Тип оценки",
+					'year' => "Учебный год",
+					'statistics' => "Анализ",
+				);
+
+				if(array_key_exists($method, $pageTitles)) {
+					$data['title'] = $pageTitles[$method];
 				}
 
 				$data['role'] = $role;
 				$data['mainlogin'] = $login;
 				$this->load->view('header', $data);
+				
 				if (method_exists($this, $method)) {
 					call_user_func_array(array($this, $method), $params);
-				}
-				else {
+				} else {
 					redirect(base_url() . "admin/teachers");
 				}
+				
 				$this->load->view('footer');
-			}
-			else {
+			} else {
 				redirect('auth/logout');
 			}
 		}
