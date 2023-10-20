@@ -1,0 +1,1 @@
+<div class="alert alert-info" role="alert">Поиск не дал результатов. Попробуйте другой запрос</div>

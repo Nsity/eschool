@@ -7,52 +7,35 @@
 		echo $s;
 	}
 
-	?>
+?>
 	
 <div class="container">
 	<h3 class="sidebar-header"><i class="fa fa-user"></i> Список учителей</h3>
-	<div class="panel panel-default panel-table">
+	
+	<?php $this->load->view('common/editpanel'); ?>
+	
+	<div class="panel panel-default">
 		<div class="panel-body">
-			<button type="button" class="btn btn-menu" id="createButton" title="Добавить учителя"><i class="fa fa-plus fa-2x"></i>
-			</br><span class="menu-item">Создать</span>
-			</button>
-		    <button href="" type="button" class="btn btn-menu disabled" id="editButton"  title="Редактировать учителя"><i class="fa fa-pencil fa-2x"></i>
-		    </br><span class="menu-item">Редактировать</span>
-		    </button>
-		    <button type="button" class="btn btn-menu disabled" id="deleteButton" data-toggle="modal" data-target="#myModal" title="Удалить учителя"><i class="fa fa-trash-o fa-2x"></i>
-		    </br><span class="menu-item">Удалить</span>
-		    </button>
+			<?php $this->load->view('common/searchform', array('placeholder' => "Поиск по ФИО и логину")); ?>
 		</div>
-	</div>
-    <div class="panel panel-default">
-	    <div class="panel-body">
-		    <form method="get">
-			    <div class="input-group">
-				    <input type="text" class="form-control" placeholder="Поиск по ФИО и логину" id="search" name="search" value="<?php if(isset($search)) echo $search;?>" >
-				    <span class="input-group-btn">
-				    <button class="btn btn-default" type="submit" name="submit" id="searchButton" title="Поиск"><i class="fa fa-search"></i></button>
-				    </span>
-				</div><!-- /input-group -->
-			</form>
-		</div>
-	    <div class="table-responsive">
-		    <table name="timetable" class="table table-striped table-hover table-bordered numeric">
-			    <thead>
-				    <tr>
-					    <th></th>
-					    <th data-sortable="true">ФИО учителя</th> <!--1-->
-					    <th>Логин</th> <!--2-->
-					    <th>Пароль</th> <!--3-->
-					    <th>Статус</th> <!--5-->
+		<div class="table-responsive">
+			<table name="timetable" class="table table-striped table-hover table-bordered numeric">
+				<thead>
+					<tr>
+						<th></th>
+						<th data-sortable="true">ФИО учителя</th> <!--1-->
+						<th>Логин</th> <!--2-->
+						<th>Пароль</th> <!--3-->
+						<th>Статус</th> <!--5-->
 					</tr>
 				</thead>
 				<tbody>
 				<?php
 					if(is_array($teachers) && count($teachers) ) {
-					foreach($teachers as $teacher) {
+						foreach($teachers as $teacher) {
 				?>
 					<tr>
-					    <td><input type="radio" name="teacher_id" value="<?php echo $teacher['TEACHER_ID'];?>"></td>
+						<td><input type="radio" name="teacher_id" value="<?php echo $teacher['TEACHER_ID'];?>"></td>
 						<td ><?php echo $teacher['TEACHER_NAME'];?></td>
 						<td><?php echo $teacher['TEACHER_LOGIN'];?></td>
 						<td><span data-toggle="tooltip" data-placement="top" title="<?php echo $teacher['TEACHER_PASSWORD']; ?>">
@@ -64,12 +47,13 @@
 			</table>
 		</div>
 	</div>
-	<?php echo $this->pagination->create_links(); ?>
 	<?php
+		echo $this->pagination->create_links(); 
+
 		if(count($teachers) == 0 && isset($search) && $search != "") {
+			$this->load->view('common/searchalert');
+		}
 	?>
-	<div class="alert alert-info" role="alert">Поиск не дал результатов. Попробуйте другой запрос</div>
-	<?php } ?>
 </div>
 
 
@@ -87,7 +71,7 @@
 			$('#editButton').removeClass('disabled');
 			$('#deleteButton').removeClass('disabled');
 		});
-	    $('#createButton').click(function() {
+		$('#createButton').click(function() {
 			document.location.href = '<?php  echo base_url(); ?>admin/teacher';
 		});
 
@@ -97,7 +81,7 @@
 		});
 
 
-		$('#buttonDeleteTeacherModal').click(function() {
+		$('#buttonDeleteModal').click(function() {
 			var value = $(":radio[name=teacher_id]").filter(":checked").val();
 			var base_url = '<?php echo base_url();?>';
 			$.ajax({
@@ -118,30 +102,8 @@
 		$("tr:not(:first)").click(function() {
 			$(this).children("td").find('input[type=radio]').prop('checked', true).change();
 		});
-
-    });
+	});
 </script>
-
-
-
-
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Удаление пользователя</h4>
-      </div>
-      <div class="modal-body">
-        <p>Вы уверены, что хотите удалить этого пользователя?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-        <button type="button" class="btn btn-sample" id="buttonDeleteTeacherModal">Удалить</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 
 
 
