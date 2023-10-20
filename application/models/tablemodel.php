@@ -1,6 +1,11 @@
 <?php
 	class Tablemodel extends CI_Model {
 
+		public function __construct() {
+			$this->load->library("roleenum");
+		}
+
+
 		function deleteRoom($id) {
 			$this->db->where('ROOM_ID', $id);
 			$this->db->delete('ROOM');
@@ -260,7 +265,7 @@
 			$this->db->set('TEACHER_LOGIN', $login);
 			$this->db->set('TEACHER_STATUS', $status);
 			$this->db->set('TEACHER_HASH', $hash);
-			$this->db->set('ROLE_ID', 3);
+			$this->db->set('ROLE_ID', Roleenum::Teacher);
 			$this->db->insert('TEACHER');
 		}
 
@@ -270,7 +275,7 @@
 			$this->db->set('TEACHER_LOGIN', $login);
 			$this->db->set('TEACHER_STATUS', $status);
 			$this->db->set('TEACHER_HASH', $hash);
-			$this->db->set('ROLE_ID', 3);
+			$this->db->set('ROLE_ID', Roleenum::Teacher);
 			$this->db->where('TEACHER_ID', $id);
 			$this->db->update('TEACHER');
 		}
@@ -374,7 +379,7 @@
 			$this->db->set('PUPIL_LOGIN', $login);
 			$this->db->set('PUPIL_STATUS', $status);
 			$this->db->set('PUPIL_HASH', $hash);
-			$this->db->set('ROLE_ID', 4);
+			$this->db->set('ROLE_ID', Roleenum::Pupil);
 			$this->db->set('PUPIL_ADDRESS', $address);
 			if($birthday == "") {
 				$this->db->set('PUPIL_BIRTHDAY', NULL);
@@ -396,7 +401,7 @@
 			$this->db->set('PUPIL_LOGIN', $login);
 			$this->db->set('PUPIL_STATUS', $status);
 			$this->db->set('PUPIL_HASH', $hash);
-			$this->db->set('ROLE_ID', 4);
+			$this->db->set('ROLE_ID', Roleenum::Pupil);
 			$this->db->set('PUPIL_ADDRESS', $address);
 			if($birthday == "") {
 				$this->db->set('PUPIL_BIRTHDAY', NULL);
@@ -457,6 +462,7 @@
 			} else {
 				$this->db->set('ROOM_ID', $room);
 			}
+			
 			$this->db->where('TIMETABLE_ID', $id);
 			$this->db->update('TIMETABLE');
 		}
@@ -464,24 +470,28 @@
 
 		function responseYear($id, $start, $finish) {
 			$query = $this->db->query("SELECT COUNT(*) AS COUNT FROM YEAR
-			WHERE YEAR_ID != '$id' AND YEAR(YEAR_START) = '$start' AND YEAR(YEAR_FINISH) = '$finish'");
+				WHERE YEAR_ID != '$id' AND YEAR(YEAR_START) = '$start' AND YEAR(YEAR_FINISH) = '$finish'");
+			
 			return $query->row_array();
 		}
 
 
 		function getSearchTeachers($search) {
 			$query = $this->db->query("SELECT TEACHER_ID AS ID, TEACHER_NAME AS NAME
-			FROM TEACHER
-			WHERE TEACHER_ID != '13' AND IFNULL(TEACHER_NAME, '') LIKE '%$search%'
-			ORDER BY TEACHER_NAME");
+				FROM TEACHER
+				WHERE TEACHER_ID != '13' AND IFNULL(TEACHER_NAME, '') LIKE '%$search%'
+				ORDER BY TEACHER_NAME");
+			
 			return $query->result_array();
 		}
 
 		function getSearchPupils($search) {
 			$query = $this->db->query("SELECT PUPIL_ID AS ID, PUPIL_NAME AS NAME
-			FROM PUPIL
-			WHERE IFNULL(PUPIL_NAME, '') LIKE '%$search%'
-			ORDER BY PUPIL_NAME");
+				FROM PUPIL
+				WHERE IFNULL(PUPIL_NAME, '') LIKE '%$search%'
+				ORDER BY PUPIL_NAME
+			");
+			
 			return $query->result_array();
 		}
 
@@ -728,8 +738,6 @@
 
 			}
 		}
-
-
 
 		function getGCMIDs($pupil_id) {
 			$query = $this->db->query("SELECT * FROM GCM_USERS WHERE PUPIL_ID = '$pupil_id'");

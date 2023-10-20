@@ -41,12 +41,14 @@
 				}
 
 				switch($role) {
-					case 4: {
+					case Roleenum::Pupil: {
 						$this->from = "PUPIL";
 						$this->to = "TEACHER";
 						break;
 					}
-					case 1: case 3: {
+					case Roleenum::ClassTeacher: 
+					case Roleenum::Teacher:
+					case Roleenum::Admin: {
 						$this->to = "PUPIL";
 						$this->from = "TEACHER";
 						break;
@@ -146,13 +148,20 @@
 
 		function conversations($offset = 1) {
 			$search = "";
+			$num = 15;
+			$data = array();
+			$url = base_url()."messages/conversations";
+		
 			if(isset($_GET['submit'])) {
 				if(isset($_GET['search'])) {
 					$search = urldecode($_GET['search']);
 					$data['search'] = $search;
-					if ($search == "") {
-						redirect(base_url()."messages/conversations");
-					} else redirect(base_url()."messages/conversations?search=".$search);
+					
+					if($search != "") {
+						$url = $url . "?" . http_build_query(array('search' => $search));
+					}
+					
+					redirect($url);
 				}
 			}
 			
@@ -160,42 +169,44 @@
 				$search = $_GET['search'];
 				$data['search'] = $search;
 			}
+			
 			$id = $this->session->userdata('id');
-			$num = 15;
+
 			$config['total_rows'] = $this->message->totalMessages($id, $this->from, $this->to, $search);
-			$config['base_url'] = base_url()."messages/conversations";
+			$config['base_url'] = $url;
 			$config['per_page'] = $num;
 
 			$this->pagination->initialize($config);
-			if (count($_GET) > 0)  { $config['suffix'] = '?' . http_build_query($_GET, '', "&");
+			if (count($_GET) > 0) { 
+				$config['suffix'] = '?' . http_build_query($_GET, '', "&");
 				$config['first_url'] = $config['base_url'].'?'.http_build_query($_GET);
 			}
 
-			$query = $this->message->getMessages($num, $offset * $num - $num, $id, $this->from, $this->to, $search);
-			$data['result'] = null;
-			$data['messages'] = array();
-			if($query) {
-				$result = array();
-				$i = 0;
-				foreach($query as $row) {
-					$user_id = $row['USER_ID'];
-					$newmessages = $this->message->getNewMessages($user_id, $id, $this->from, $this->to);
-					if(count($newmessages) > 0) {
-						$result[$i]["new"] = count($newmessages);
-					} else {
-						$result[$i]["new"] = null;
-					}
-					$i++;
+			$data['messages'] = $this->message->getMessages($num, $offset * $num - $num, $id, $this->from, $this->to, $search);
+			
+			$result = array();
+			$i = 0;
+			foreach($data['messages'] as $row) {
+				$user_id = $row['USER_ID'];
+				$newmessages = $this->message->getNewMessages($user_id, $id, $this->from, $this->to);
+				if(count($newmessages) > 0) {
+					$result[$i]["new"] = count($newmessages);
+				} else {
+					$result[$i]["new"] = null;
 				}
-				$data['result'] = $result;
-				$data['messages'] =  $query;
+				$i++;
 			}
+
+			$data['result'] = $result;
 			$this->load->view('message/conversationsview', $data);
 		}
 
 
 		function conversation($user, $offset = 1) {
 			$search = "";
+			$data = array();
+			$num = 15;
+
 			if(isset($_GET['submit'])) {
 				if(isset($_GET['search'])) {
 					$search = urldecode($_GET['search']);
@@ -205,12 +216,13 @@
 					} else redirect(base_url()."messages/conversation/".$user."?search=".$search);
 				}
 			}
+			
 			if(isset($_GET['search'])) {
 				$search = $_GET['search'];
 				$data['search'] = $search;
 			}
+			
 			$id = $this->session->userdata('id');
-			$num = 15;
 			$config['total_rows'] = $this->message->totalConversationMessages($id, $user, $search, $this->from, $this->to);
 			$config['base_url'] = base_url()."messages/conversation/".$user;
 			$config['per_page'] = $num;
@@ -218,15 +230,13 @@
 
 			$data['user'] = $this->message->getUserById($user, $this->from, $this->to)['USER_NAME'];
 
-			if (count($_GET) > 0)  { $config['suffix'] = '?' . http_build_query($_GET, '', "&");
+			if (count($_GET) > 0) { 
+				$config['suffix'] = '?' . http_build_query($_GET, '', "&");
 				$config['first_url'] = $config['base_url'].'?'.http_build_query($_GET);
 			}
 			$this->pagination->initialize($config);
-			$query = $this->message->getConversationMessages($num, $offset * $num - $num, $id, $user, $search, $this->from, $this->to);
-			$data['messages'] = null;
-			if($query) {
-				$data['messages'] =  $query;
-			}
+			$data['messages'] = $this->message->getConversationMessages($num, $offset * $num - $num, $id, $user, $search, $this->from, $this->to);
+
 			$this->load->view('message/conversationview', $data);
 		}
 	}

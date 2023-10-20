@@ -33,13 +33,13 @@
 		<div class="panel-body">
 			<button type="button" class="btn btn-menu" id="writeButton" title="Написать сообщение"><i class="fa fa-plus fa-2x"></i></i>
 			</br><span class="menu-item">Написать</span>
-		    </button>
-		    <button type="button" class="btn btn-menu disabled" id="readButton" title="Отметить прочитано"><i class="fa fa-check-square-o fa-2x"></i>
-		    </br><span class="menu-item">Прочитано</span>
-		    </button>
-		    <button type="button" class="btn btn-menu disabled" id="deleteButton" data-toggle="modal" data-target="#myModal" title="Удалить переписку"><i class="fa fa-trash-o fa-2x"></i>
-		    </br><span class="menu-item">Удалить</span>
-		    </button>
+				</button>
+				<button type="button" class="btn btn-menu disabled" id="readButton" title="Отметить прочитано"><i class="fa fa-check-square-o fa-2x"></i>
+				</br><span class="menu-item">Прочитано</span>
+				</button>
+				<button type="button" class="btn btn-menu disabled" id="deleteButton" data-toggle="modal" data-target="#myModal" title="Удалить переписку"><i class="fa fa-trash-o fa-2x"></i>
+				</br><span class="menu-item">Удалить</span>
+				</button>
 		</div>
 	</div>
 	<div class="panel panel-default">
@@ -47,11 +47,11 @@
 			<form method="get">
 				<div class="input-group">
 					<input type="text" class="form-control" placeholder="Поиск по собеседникам" id="search" name="search" value="<?php if(isset($search)) echo $search;?>" >
-				 	<span class="input-group-btn">
-				 	<button class="btn btn-default" type="submit" name="submit" id="searchButton" title="Поиск"><i class="fa fa-search"></i></button>
-				 	</span>
+					<span class="input-group-btn">
+					<button class="btn btn-default" type="submit" name="submit" id="searchButton" title="Поиск"><i class="fa fa-search"></i></button>
+					</span>
 				</div><!-- /input-group -->
-		    </form>
+				</form>
 		</div>
 		<div class="table-responsive">
 			<table name="timetable" class="table table-striped table-hover numeric">
@@ -63,44 +63,58 @@
 						<th style="text-align: center; width: 20%;">Новых</th>
 					</tr>
 				</thead>
-		    	<tbody>
-							<?php if(is_array($messages) && count($messages) ) {
-								$i = 0;
-								foreach($messages as $message){ ?>
+				<tbody>
+				<?php if(is_array($messages) && count($messages) ) {
+						$i = 0;
+						foreach($messages as $message) { 
+				?>
 					<tr style="cursor: pointer; cursor: hand;">
-						<td><input type="checkbox" name="users[]" value="<?php echo $message['USER_ID']; ?>"</td>
-						<td><?php echo $message['USER_NAME']; ?></br>
-										 <span style="font-size: 12px; color: grey; font-style: italic;">Последнее сообщение
-										 <?php showDate($message['MAX']); ?></span></td>
+						<td>
+							<input type="checkbox" name="users[]" value="<?php echo $message['USER_ID']; ?>">
+						</td>
+						<td>
+							<?php echo $message['USER_NAME']; ?></br>
+							<span style="font-size: 12px; color: grey; font-style: italic;">Последнее сообщение
+							<?php showDate($message['MAX']); ?></span></td>
 						<td style="vertical-align: middle; text-align: center;"><?php echo $message['COUNT']; ?></td>
-						<td style="vertical-align: middle; text-align: center;"><?php if(isset($result[$i]["new"])) {?><span class="green"><?php echo $result[$i]["new"];?></span><?php } else echo "-";  ?></td>
+						<td style="vertical-align: middle; text-align: center;">
+						<?php 
+							if(isset($result[$i]["new"])) {
+						?>
+							<span class="green"><?php echo $result[$i]["new"];?></span>
+						<?php } else echo "-";  ?>
+						</td>
 					</tr>
-								<?php $i++; }
-									} ?>
-			    </tbody>
+				<?php 
+							$i++; 
+						}
+					} 
+				?>
+				</tbody>
 			</table>
 		</div>
 	</div>
-	<?php echo $this->pagination->create_links(); ?>
 	<?php
+		echo $this->pagination->create_links();
+
 		if(count($messages) == 0 && isset($search) && $search != "") {
+			$this->load->view('common/searchalert');
+		} 
 	?>
-	<div class="alert alert-info" role="alert">Поиск не дал результатов. Попробуйте другой запрос</div>
-	<?php } ?>
 </div>
 
 
 <script type="text/javascript">
-    $(document).ready(function() {
-	    $("#all").change(function(){
-		    $("input[name='users[]']").prop('checked', this.checked);
-		   	if(this.checked == true) {
-		    	$('#deleteButton').removeClass('disabled');
-		    	$('#readButton').removeClass('disabled');
-	    	} else {
-		    	$('#deleteButton').addClass('disabled');
-		    	$('#readButton').addClass('disabled');
-		    }
+		$(document).ready(function() {
+			$("#all").change(function(){
+				$("input[name='users[]']").prop('checked', this.checked);
+				if(this.checked == true) {
+					$('#deleteButton').removeClass('disabled');
+					$('#readButton').removeClass('disabled');
+				} else {
+					$('#deleteButton').addClass('disabled');
+					$('#readButton').addClass('disabled');
+				}
 		});
 
 		$('#writeButton').click(function() {
@@ -115,11 +129,11 @@
 			});
 			if(s != 0) {
 				$('#deleteButton').removeClass('disabled');
-		    	$('#readButton').removeClass('disabled');
-	    	} else {
-		    	$('#deleteButton').addClass('disabled');
-		    	$('#readButton').addClass('disabled');
-		    }
+					$('#readButton').removeClass('disabled');
+				} else {
+					$('#deleteButton').addClass('disabled');
+					$('#readButton').addClass('disabled');
+				}
 			e.stopPropagation();
 		});
 
@@ -189,25 +203,25 @@
 			});*/
 			window.location.href = '<?php  echo base_url(); ?>messages/conversation/'+ id;
 		});
-    });
+		});
 </script>
 
 
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Удаление переписок</h4>
-      </div>
-      <div class="modal-body">
-        <p>Вы уверены, что хотите удалить эти переписки?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-        <button type="button" class="btn btn-sample" id="buttonDeleteMessageModal">Удалить</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Удаление переписок</h4>
+			</div>
+			<div class="modal-body">
+				<p>Вы уверены, что хотите удалить эти переписки?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+				<button type="button" class="btn btn-sample" id="buttonDeleteMessageModal">Удалить</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->

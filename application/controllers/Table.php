@@ -4,7 +4,9 @@
 
         public function __construct() {
             parent::__construct();
+          
             $this->load->model('tablemodel', 'table');
+            $this->load->library("roleenum");
         }
 
         //$table - из какой таблицы удаляем, $id - id записи
@@ -53,15 +55,18 @@
 				case 'message': {
 					$role = $this->session->userdata('role');
 					switch($role) {
-						case 4: {
+						case Roleenum::Pupil: {
 							$this->table->deleteMessage($id, 'PUPIL', 'TEACHER');
 							break;
 						}
-						case 1: case 3: {
+						case Roleenum::ClassTeacher: 
+						case Roleenum::Teacher:
+						case Roleenum::Admin:  {
 							$this->table->deleteMessage($id, 'TEACHER', 'PUPIL');
 							break;
 						}
 					}
+
 					break;
 				}
 				case 'lesson': {
@@ -76,11 +81,13 @@
 					$user = $this->session->userdata('id');
 					$role = $this->session->userdata('role');
 					switch($role) {
-						case 4: {
+						case Roleenum::Pupil: {
 							$this->table->deleteConversation($user, $id, 'PUPIL', 'TEACHER');
 							break;
 						}
-						case 1: case 3: {
+						case Roleenum::ClassTeacher: 
+						case Roleenum::Teacher:
+						case Roleenum::Admin:  {
 							$this->table->deleteConversation($user, $id, 'TEACHER', 'PUPIL');
 							break;
 						}
@@ -390,11 +397,13 @@
 			$search = $_POST['search'];
 			$role = $this->session->userdata('role');
 			switch($role) {
-					case 4: {
+					case Roleenum::Pupil: {
 						$contacts = $this->table->getSearchTeachers($search);
 						break;
 					}
-					case 1: case 3: {
+					case Roleenum::ClassTeacher: 
+					case Roleenum::Teacher:
+					case Roleenum::Admin: {
 						$contacts = $this->table->getSearchPupils($search);
 						break;
 					}
@@ -416,11 +425,13 @@
 			date_default_timezone_set('Europe/Moscow');
 			$date = date('Y-m-d H:i:s');
 			switch($role) {
-				case 4: {
+				case Roleenum::Pupil: {
 					$this->table->addMessage($user, $id, $text, $date, 'PUPIL', 'TEACHER');
 					break;
 				}
-				case 1: case 3: {
+				case Roleenum::ClassTeacher: 
+				case Roleenum::Teacher:
+				case Roleenum::Admin: {
 					$message_id = $this->table->addMessage($user, $id, $text, $date, 'TEACHER', 'PUPIL');
 
 					$json = array("ТекстСообщения" => $text, "ДатаСообщения" => $date, "УчительИд" => $user, "Ид" => $message_id, "ТипСообщения" => 1, "Прочтено" => 0);
@@ -451,11 +462,13 @@
 		function readmessage($id) {
 			$role = $this->session->userdata('role');
 			switch($role) {
-				case 4: {
+				case Roleenum::Pupil: {
 					$this->table->readMessage($id, 'PUPIL', 'TEACHER');
 					break;
 				}
-				case 1: case 3: {
+				case Roleenum::ClassTeacher: 
+				case Roleenum::Teacher:
+				case Roleenum::Admin: {
 					$this->table->readMessage($id, 'TEACHER', 'PUPIL');
 					break;
 				}
@@ -467,11 +480,13 @@
 			$user = $this->session->userdata('id');
 			$role = $this->session->userdata('role');
 			switch($role) {
-				case 4: {
+				case Roleenum::Pupil: {
 					$this->table->readConversation($user, $id, 'PUPIL', 'TEACHER');
 					break;
 				}
-				case 1: case 3: {
+				case Roleenum::ClassTeacher: 
+				case Roleenum::Teacher:
+				case Roleenum::Admin: {
 					$this->table->readConversation($user, $id, 'TEACHER', 'PUPIL');
 					break;
 				}

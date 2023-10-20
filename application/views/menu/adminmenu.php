@@ -35,4 +35,5 @@
 	</ul>
 </li>
 <li><a href="<?php echo base_url();?>admin/news">Новости</a></li>
-<li><a href="<?php echo base_url();?>admin/statistics">Анализ</a></li>;
+<li><a href="<?php echo base_url();?>admin/statistics">Анализ</a></li>
+<li><a href="<?php echo base_url();?>messages/conversations">Общение</a></li>

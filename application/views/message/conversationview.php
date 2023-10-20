@@ -29,63 +29,66 @@
 ?>
 <div class="container">
 	<div class="row">
-    <div class="col-md-10 col-md-offset-1">
-    <div class="panel panel-default">
-		<div class="panel-body">
-			<div class="form-group">
-				<textarea style="resize: vertical;" class="form-control" rows="3" maxlength="500" id="inputText" name="inputText" placeholder="Текст сообщения"></textarea>
+		<div class="col-md-10 col-md-offset-1">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="form-group">
+						<textarea style="resize: vertical;" class="form-control" rows="3" maxlength="500" id="inputText" name="inputText" placeholder="Текст сообщения"></textarea>
+					</div>
+					<div class="modal-footer" style="margin-bottom: -15px; padding-right: 0px;">
+						<button type="button" class="btn btn-sample" name="send" id="send" title="Отправить">Отправить</button>
+					</div>
+				</div>
 			</div>
-			<div class="modal-footer" style="margin-bottom: -15px; padding-right: 0px;">
-				<button type="button" class="btn btn-sample" name="send" id="send" title="Отправить">Отправить</button>
+			<h3 class="sidebar-header"><i class="fa fa-comments"></i> Общение с <strong><?php echo $user; ?></strong></h3>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<form method="get">
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Поиск по сообщениям" id="search" name="search" value="<?php if(isset($search)) echo $search;?>" >
+							<span class="input-group-btn">
+							<button class="btn btn-default" type="submit" name="submit" id="searchButton" title="Поиск"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+							</span>
+						</div><!-- /input-group -->
+					</form>
+				</div>
+				<div class="table-responsive">
+					<table name="timetable" class="table table-hover table-striped  numeric" >
+						<tbody>
+							<?php if(is_array($messages) && count($messages) ) {
+									foreach($messages as $message){ ?>
+									<?php if($message['MESSAGE_READ'] == 0 && $message['MESSAGE_FOLDER'] == 1) { ?><tr class="info"><?php } else { ?><tr><?php }?>
+										<td hidden="true"><input type="radio" name="message_id" value="<?php echo $message['USER_MESSAGE_ID'];?>"></td>
+										<td>
+											<button hidden="true" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<strong><?php if($message['MESSAGE_FOLDER'] == 1) echo $message['USER_NAME']; else echo "Я"; ?></strong> <span style="font-size: 12px; font-style: italic;" class="time"><?php showDate($message['MESSAGE_DATE']); ?></span></br>
+										<span style="display: block; padding-top: 10px;"><?php echo $message['MESSAGE_TEXT']; ?></span>
+										</td>
+									</tr>
+								<?php 
+									}} 
+								?>
+						</tbody>
+					</table>
+				</div>
 			</div>
+		<?php
+			echo $this->pagination->create_links();
+
+			if(count($messages) == 0 && isset($search) && $search != "") {
+				$this->load->view('common/searchalert'); 
+			} 
+		?>
 		</div>
 	</div>
-	<h3 class="sidebar-header"><i class="fa fa-comments"></i> Общение с <strong><?php echo $user; ?></strong></h3>
-    <div class="panel panel-default">
-		<div class="panel-body">
-			<form method="get">
-				<div class="input-group">
-					<input type="text" class="form-control" placeholder="Поиск по сообщениям" id="search" name="search" value="<?php if(isset($search)) echo $search;?>" >
-					<span class="input-group-btn">
-					<button class="btn btn-default" type="submit" name="submit" id="searchButton" title="Поиск"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-					</span>
-				</div><!-- /input-group -->
-			</form>
-		</div>
-		<div class="table-responsive">
-		    <table name="timetable" class="table table-hover table-striped  numeric" >
-			    <tbody>
-						<?php if(is_array($messages) && count($messages) ) {
-								foreach($messages as $message){ ?>
-								<?php if($message['MESSAGE_READ'] == 0 && $message['MESSAGE_FOLDER'] == 1) { ?><tr class="info"><?php } else { ?><tr><?php }?>
-									<td hidden="true"><input type="radio" name="message_id" value="<?php echo $message['USER_MESSAGE_ID'];?>"></td>
-									<td>
-										<button hidden="true" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-									<strong><?php if($message['MESSAGE_FOLDER'] == 1) echo $message['USER_NAME']; else echo "Я"; ?></strong> <span style="font-size: 12px; font-style: italic;" class="time"><?php showDate($message['MESSAGE_DATE']); ?></span></br>
-									<span style="display: block; padding-top: 10px;"><?php echo $message['MESSAGE_TEXT']; ?></span>
-									</td>
-								</tr>
-								<?php }
-									} ?>
-			    </tbody>
-		    </table>
-        </div>
-    </div>
-	<?php echo $this->pagination->create_links(); ?>
-	<?php
-		if(count($messages) == 0 && isset($search) && $search != "") {
-	?>
-	<div class="alert alert-info" role="alert">Поиск не дал результатов. Попробуйте другой запрос</div>
-	<?php } ?>
-	</div></div>
 </div>
 
 
 <script type="text/javascript">
-    $(document).ready(function() {
-	    $('.close').click(function() {
-		    var value = $(this).closest("tr").find(':radio[name=message_id]').val();
-		    var base_url = '<?php echo base_url();?>';
+	$(document).ready(function() {
+		$('.close').click(function() {
+			var value = $(this).closest("tr").find(':radio[name=message_id]').val();
+			var base_url = '<?php echo base_url();?>';
 			$.ajax({
 				type: "POST",
 				url: base_url + "table/del/message/" + value,
@@ -101,25 +104,25 @@
 		});
 
 		$('#send').click(function() {
-		    var id = "<?php  echo $this->uri->segment(3);?>";
-		    var text = $.trim($('#inputText').val());
-		    var base_url = '<?php echo base_url();?>';
-		    if(text.length != "") {
-			    $.ajax({
-				    type: "POST",
-				    url: base_url + "table/addmessage",
-				    data:  "id=" + id + "&text=" + text,
-				    timeout: 30000,
-				    async: false,
-				    error: function(xhr) {
-					    console.log('Ошибка!' + xhr.status + ' ' + xhr.statusText);
+			var id = "<?php  echo $this->uri->segment(3);?>";
+			var text = $.trim($('#inputText').val());
+			var base_url = '<?php echo base_url();?>';
+			if(text.length != "") {
+				$.ajax({
+					type: "POST",
+					url: base_url + "table/addmessage",
+					data:  "id=" + id + "&text=" + text,
+					timeout: 30000,
+					async: false,
+					error: function(xhr) {
+						console.log('Ошибка!' + xhr.status + ' ' + xhr.statusText);
 					},
 					success: function(response) {
 						//alert(response);
 						location.reload();
-				    }
+					}
 				});
-		    } else {
+			} else {
 				return false;
 			}
 		});
@@ -128,7 +131,7 @@
 			if (e.which == 13 && ! e.shiftKey) {
 				$('#send').click();
 			}
-	    });
+		});
 
 		$('table tr').mouseover(function() {
 			var tr = $(this);
@@ -179,5 +182,5 @@
 			}
 			location.reload();
 		});
-    });
+	});
 </script>

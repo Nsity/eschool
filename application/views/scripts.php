@@ -22,6 +22,6 @@
 
 <?php foreach($scripts as $script) : ?>
 	
-	<script src="<?php echo base_url() . $script;?>" type="text/javascript"></script>
+	<script src="<?php echo base_url() . $script; ?>" type="text/javascript"></script>
 
 <?php endforeach; ?>
