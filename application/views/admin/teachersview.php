@@ -6,7 +6,6 @@
 		}
 		echo $s;
 	}
-
 ?>
 	
 <div class="container">
@@ -30,10 +29,7 @@
 					</tr>
 				</thead>
 				<tbody>
-				<?php
-					if(is_array($teachers) && count($teachers) ) {
-						foreach($teachers as $teacher) {
-				?>
+				<?php foreach($teachers as $teacher) : ?>
 					<tr>
 						<td><input type="radio" name="teacher_id" value="<?php echo $teacher['TEACHER_ID'];?>"></td>
 						<td ><?php echo $teacher['TEACHER_NAME'];?></td>
@@ -42,7 +38,7 @@
 							<?php hidePassword($teacher['TEACHER_PASSWORD']);?></span></td>
 						<td><?php if($teacher['TEACHER_STATUS'] == 0) echo "Не активен"; else echo "Активен";?></td>
 					</tr>
-					<?php }} ?>
+				<?php endforeach; ?>
 				</tbody>
 			</table>
 		</div>

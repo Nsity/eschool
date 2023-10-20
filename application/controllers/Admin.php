@@ -7,16 +7,16 @@
 		var $admin_login = null;
 
 		public function __construct() {
-            parent::__construct();
-            $this->load->model('adminmodel', 'admin');
-            $this->load->model('tablemodel', 'table');
-            $this->load->library("roleenum");
-            //$this->load->library('javascript');
+			parent::__construct();
+			$this->load->model('adminmodel', 'admin');
+			$this->load->model('tablemodel', 'table');
+			$this->load->library("roleenum");
+			//$this->load->library('javascript');
 
-            $this->admin_role = $this->session->userdata('role');
-            $this->admin_login = $this->session->userdata('login');
-            $this->admin_id = $this->session->userdata('id');
-        }
+			$this->admin_role = $this->session->userdata('role');
+			$this->admin_login = $this->session->userdata('login');
+			$this->admin_id = $this->session->userdata('id');
+		}
 
 		function _remap($method, $params = array()) {
 			$login =  $this->admin_login; 
@@ -24,7 +24,6 @@
 			$roleEnum = $this->roleenum;
 
 			if(isset($login) && isset($role) && $role == Roleenum::Admin) {
-
 				$pageTitles = array(
 					'teachers' => "Список учителей",
 					'news' => "Список новостей",
@@ -65,117 +64,123 @@
 
 		function teachers($offset = 1) {
 			$search = "";
+			$num = 15;
+			$url = base_url()."admin/teachers";
+			$data = array();
+
 			if(isset($_GET['submit'])) {
 				if(isset($_GET['search'])) {
 					$search = urldecode($_GET['search']);
 					$data['search'] = $search;
-					if ($search == "") {
-						redirect(base_url()."admin/teachers");
-					} else redirect(base_url()."admin/teachers?search=".$search);
+					
+					if($search != "") {
+						$url = $url . "?" . http_build_query(array('search' => $search));
+					}
+					
+					redirect($url);
 				}
 			}
+
 			if(isset($_GET['search'])) {
 				$search = $_GET['search'];
 				$data['search'] = $search;
 			}
 
-			$num = 15;
-
-			//$teachers = $this->admin->getTeachers($num, $offset * $num - $num, $search);
-
 			$config['total_rows'] = $this->admin->totalTeachers($search);
-			$config['base_url'] = base_url()."admin/teachers";
+			$config['base_url'] = $url;
 			$config['per_page'] = $num;
 
-
-			if (count($_GET) > 0)  { $config['suffix'] = '?' . http_build_query($_GET, '', "&");
+			if (count($_GET) > 0)  { 
+				$config['suffix'] = '?' . http_build_query($_GET, '', "&");
 				$config['first_url'] = $config['base_url'].'?'.http_build_query($_GET);
 			}
 
 			$this->pagination->initialize($config);
 
-			$query = $this->admin->getTeachers($num, $offset * $num - $num, $search);
-			$data['teachers'] = array();
-			if($query) {
-				$data['teachers'] =  $query;
-			}
+			$data['teachers'] = $this->admin->getTeachers($num, $offset * $num - $num, $search);
 
 			$this->load->view("admin/teachersview", $data);
 		}
 
 		function classes($offset = 1) {
 			$search = "";
+			$num = 15;
+			$url = base_url()."admin/classes";
+			$data = array();
+
 			if(isset($_GET['submit'])) {
 				if(isset($_GET['search'])) {
 					$search = urldecode($_GET['search']);
 					$data['search'] = $search;
-					if ($search == "") {
-						redirect(base_url()."admin/classes");
-					} else redirect(base_url()."admin/classes?search=".$search);
+					
+					if($search != "") {
+						$url = $url . "?" . http_build_query(array('search' => $search));
+					}
+					
+					redirect($url);
 				}
 			}
+
 			if(isset($_GET['search'])) {
 				$search = $_GET['search'];
 				$data['search'] = $search;
 			}
-			$num = 15;
-
-			//$classes = $this->admin->getClasses($num, $offset * $num - $num, $search);
 
 			$config['total_rows'] = $this->admin->totalClasses($search);
-			$config['base_url'] = base_url()."admin/classes";
+			$config['base_url'] = $url;
 			$config['per_page'] = $num;
 
 
-			if (count($_GET) > 0)  { $config['suffix'] = '?' . http_build_query($_GET, '', "&");
+			if (count($_GET) > 0) { 
+				$config['suffix'] = '?' . http_build_query($_GET, '', "&");
 				$config['first_url'] = $config['base_url'].'?'.http_build_query($_GET);
 			}
 
 			$this->pagination->initialize($config);
-			$query = $this->admin->getClasses($num, $offset * $num - $num, $search);
-			$data['classes'] = array();
-			if($query) {
-				$data['classes'] =  $query;
-			}
+			
+			$data['classes'] = $this->admin->getClasses($num, $offset * $num - $num, $search);
+			
 			$this->load->view("admin/classesview", $data);
 		}
 
 
 		function subjects($offset = 1) {
 			$search = "";
+			$num = 15;
+			$url = base_url()."admin/subjects";
+			$data = array();
+
 			if(isset($_GET['submit'])) {
 				if(isset($_GET['search'])) {
 					$search = urldecode($_GET['search']);
 					$data['search'] = $search;
-					if ($search == "") {
-						redirect(base_url()."admin/subjects");
-					} else redirect(base_url()."admin/subjects?search=".$search);
+					
+					if($search != "") {
+						$url = $url . "?" . http_build_query(array('search' => $search));
+					}
+					
+					redirect($url);
 				}
 			}
+
 			if(isset($_GET['search'])) {
 				$search = $_GET['search'];
 				$data['search'] = $search;
 			}
 
-			$num = 15;
-
-			//$subjects_array = $this->admin->getSubjects($num, $offset * $num - $num, $search);
-
 			$config['total_rows'] = $this->admin->totalSubjects($search);
-			$config['base_url'] = base_url()."admin/subjects";
+			$config['base_url'] = $url;
 			$config['per_page'] = $num;
 
-			if (count($_GET) > 0)  { $config['suffix'] = '?' . http_build_query($_GET, '', "&");
+			if (count($_GET) > 0) { 
+				$config['suffix'] = '?' . http_build_query($_GET, '', "&");
 				$config['first_url'] = $config['base_url'].'?'.http_build_query($_GET);
 			}
 
-
 			$this->pagination->initialize($config);
-			$query = $this->admin->getSubjects($num, $offset * $num - $num, $search);
-			$data['subjects'] = array();
-			if($query) {
-				$data['subjects'] =  $query;
-			}
+			
+			$data['subjects'] = $this->admin->getSubjects($num, $offset * $num - $num, $search);
+
 			$this->load->view("admin/subjectsview", $data);
 		}
 
@@ -190,24 +195,24 @@
 				}
 				redirect(base_url()."admin/subjects");
 			} else {
-			if(isset($id)) {
-				$subject = $this->admin->getSubjectById($id);
-				if(isset($subject)) {
-					$data['subject'] = $subject['SUBJECT_NAME'];
-					$data['id'] = $subject['SUBJECT_ID'];
-					$data['title'] = 'Редактирование общего предмета';
+				if(isset($id)) {
+					$subject = $this->admin->getSubjectById($id);
+					if(isset($subject)) {
+						$data['subject'] = $subject['SUBJECT_NAME'];
+						$data['id'] = $subject['SUBJECT_ID'];
+						$data['title'] = 'Редактирование общего предмета';
+						$this->load->view("blankview/blanksubjectview", $data);
+
+					} else {
+						//ошибка
+						$data['error'] = "Такого общего предмета не существует. Вернитесь обратно";
+						$this->load->view("errorview", $data);
+					}
+				} else {
+					$data['title'] = 'Добавление нового общего предмета';
 					$this->load->view("blankview/blanksubjectview", $data);
 
-				} else {
-					//ошибка
-					$data['error'] = "Такого общего предмета не существует. Вернитесь обратно";
-					$this->load->view("errorview", $data);
 				}
-			} else {
-				$data['title'] = 'Добавление нового общего предмета';
-				$this->load->view("blankview/blanksubjectview", $data);
-
-			}
 			}
 		}
 
@@ -251,22 +256,22 @@
 				}
 				redirect(base_url()."admin/rooms");
 			} else {
-			if(isset($id)) {
-				$room = $this->admin->getRoomById($id);
-				if(isset($room)) {
-					$data['room'] = $room['ROOM_NAME'];
-					$data['id'] = $room['ROOM_ID'];
-					$data['title'] = 'Редактирование кабинета';
-					$this->load->view("blankview/blankroomview", $data);
+				if(isset($id)) {
+					$room = $this->admin->getRoomById($id);
+					if(isset($room)) {
+						$data['room'] = $room['ROOM_NAME'];
+						$data['id'] = $room['ROOM_ID'];
+						$data['title'] = 'Редактирование кабинета';
+						$this->load->view("blankview/blankroomview", $data);
+					} else {
+						//ошибка
+						$data['error'] = "Такого кабинета не существует. Вернитесь обратно";
+						$this->load->view("errorview", $data);
+					}
 				} else {
-					//ошибка
-					$data['error'] = "Такого кабинета не существует. Вернитесь обратно";
-					$this->load->view("errorview", $data);
+					$data['title'] = 'Добавление нового кабинета';
+					$this->load->view("blankview/blankroomview", $data);
 				}
-			} else {
-				$data['title'] = 'Добавление нового кабинета';
-				$this->load->view("blankview/blankroomview", $data);
-			}
 			}
 		}
 
@@ -274,37 +279,41 @@
 
 		function rooms($offset = 1) {
 			$search = "";
+			$num = 15;
+			$url = base_url()."admin/rooms";
+			$data = array();
+
 			if(isset($_GET['submit'])) {
 				if(isset($_GET['search'])) {
 					$search = urldecode($_GET['search']);
 					$data['search'] = $search;
-					if ($search == "") {
-						redirect(base_url()."admin/rooms");
-					} else redirect(base_url()."admin/rooms?search=".$search);
+					
+					if($search != "") {
+						$url = $url . "?" . http_build_query(array('search' => $search));
+					}
+					
+					redirect($url);
 				}
 			}
+
 			if(isset($_GET['search'])) {
 				$search = $_GET['search'];
 				$data['search'] = $search;
 			}
-			// Переменная хранит число сообщений выводимых на станице
-			$num = 15;
 
 			$config['total_rows'] = $this->admin->totalRooms($search);
-			$config['base_url'] = base_url()."admin/rooms";
+			$config['base_url'] = $url;
 			$config['per_page'] = $num;
 
-			if (count($_GET) > 0)  { $config['suffix'] = '?' . http_build_query($_GET, '', "&");
+			if (count($_GET) > 0) { 
+				$config['suffix'] = '?' . http_build_query($_GET, '', "&");
 				$config['first_url'] = $config['base_url'].'?'.http_build_query($_GET);
 			}
 
 			$this->pagination->initialize($config);
 
-			$query = $this->admin->getRooms($num, $offset * $num - $num, $search);
-			$data['rooms'] = array();
-			if($query) {
-				$data['rooms'] =  $query;
-			}
+			$data['rooms'] = $this->admin->getRooms($num, $offset * $num - $num, $search);
+			
 			$this->load->view("admin/roomsview", $data);
 		}
 
@@ -312,78 +321,84 @@
 
 		function types($offset = 1) {
 			$search = "";
+			$num = 15;
+			$url = base_url()."admin/types";
+			$data = array();
+
 			if(isset($_GET['submit'])) {
 				if(isset($_GET['search'])) {
 					$search = urldecode($_GET['search']);
 					$data['search'] = $search;
-					if ($search == "") {
-						redirect(base_url()."admin/types");
-					} else redirect(base_url()."admin/types?search=".$search);
+					
+					if($search != "") {
+						$url = $url . "?" . http_build_query(array('search' => $search));
+					}
+					
+					redirect($url);
 				}
 			}
+
 			if(isset($_GET['search'])) {
 				$search = $_GET['search'];
 				$data['search'] = $search;
 			}
 
-			// Переменная хранит число сообщений выводимых на станице
-			$num = 15;
-
 			$config['total_rows'] = $this->admin->totalTypes($search);
-			$config['base_url'] = base_url()."admin/types";
+			$config['base_url'] = $url;
 			$config['per_page'] = $num;
 
-			if (count($_GET) > 0)  { $config['suffix'] = '?' . http_build_query($_GET, '', "&");
+			if (count($_GET) > 0) { 
+				$config['suffix'] = '?' . http_build_query($_GET, '', "&");
 				$config['first_url'] = $config['base_url'].'?'.http_build_query($_GET);
 			}
 
 			$this->pagination->initialize($config);
 
-			$query = $this->admin->getTypes($num, $offset * $num - $num, $search);
-			$data['types'] = array();
-			if($query) {
-				$data['types'] =  $query;
-			}
+			$data['types'] = $this->admin->getTypes($num, $offset * $num - $num, $search);
+
 			$this->load->view("admin/typesview", $data);
 		}
 
 
 		function news($offset = 1) {
 			$search = "";
+			$num = 15;
+			$url = base_url()."admin/news";
+			$data = array();
+
 			if(isset($_GET['submit'])) {
 				if(isset($_GET['search'])) {
 					$search = urldecode($_GET['search']);
 					$data['search'] = $search;
-					if ($search == "") {
-						redirect(base_url()."admin/news");
-					} else redirect(base_url()."admin/news?search=".$search);
+					
+					if($search != "") {
+						$url = $url . "?" . http_build_query(array('search' => $search));
+					}
+					
+					redirect($url);
 				}
 			}
+
 			if(isset($_GET['search'])) {
 				$search = $_GET['search'];
 				$data['search'] = $search;
 			}
 
-			// Переменная хранит число сообщений выводимых на станице
-			$num = 15;
-
 			$id = $this->admin_id; //$this->session->userdata('id');
 
 			$config['total_rows'] = $this->admin->totalNews($id, $search);
-			$config['base_url'] = base_url()."admin/news";
+			$config['base_url'] = $url;
 			$config['per_page'] = $num;
 
-			if (count($_GET) > 0)  { $config['suffix'] = '?' . http_build_query($_GET, '', "&");
+			if (count($_GET) > 0) { 
+				$config['suffix'] = '?' . http_build_query($_GET, '', "&");
 				$config['first_url'] = $config['base_url'].'?'.http_build_query($_GET);
 			}
 
 			$this->pagination->initialize($config);
 
-			$query = $this->admin->getNews($num, $offset * $num - $num, $id, $search);
-			$data['news'] = array();
-			if($query) {
-				$data['news'] =  $query;
-			}
+			$data['news'] = $this->admin->getNews($num, $offset * $num - $num, $id, $search);
+			
 			$this->load->view("admin/newsview", $data);
 		}
 
@@ -405,21 +420,21 @@
 					$admin = $this->admin_id; //$this->session->userdata('id');
 					$news = $this->admin->getNewsById($id, $admin);
 					if(isset($news)) {
-					    $data['date'] = $news['NEWS_TIME'];
-					    $data['id'] = $news['NEWS_ID'];
-					    $data['text'] = $news['NEWS_TEXT'];
-					    $data['theme'] = $news['NEWS_THEME'];
-					    $data['title'] = 'Редактирование новости';
-					    $this->load->view("blankview/blanknewsview", $data);
-				    } else {
+						$data['date'] = $news['NEWS_TIME'];
+						$data['id'] = $news['NEWS_ID'];
+						$data['text'] = $news['NEWS_TEXT'];
+						$data['theme'] = $news['NEWS_THEME'];
+						$data['title'] = 'Редактирование новости';
+						$this->load->view("blankview/blanknewsview", $data);
+					} else {
 					   //ошибка
-					    $data['error'] = "Такой новости не существует. Вернитесь обратно";
-					    $this->load->view("errorview", $data);
+						$data['error'] = "Такой новости не существует. Вернитесь обратно";
+						$this->load->view("errorview", $data);
 				}
-	            } else {
-		            $data['title'] = 'Добавление новой новости';
-				    $this->load->view("blankview/blanknewsview", $data);
-			    }
+				} else {
+					$data['title'] = 'Добавление новой новости';
+					$this->load->view("blankview/blanknewsview", $data);
+				}
 			}
 		}
 
@@ -541,26 +556,27 @@
 			if($query) {
 				$data['periods'] =  $query;
 			}
+			
 			$this->load->view("admin/yearsview", $data);
 		}
 
 
 		function year($id = null) {
 			if(isset($_POST['save'])) {
-			    $year_start = $_POST['inputYearStart'];
-			    $year_finish = $_POST['inputYearFinish'];
+				$year_start = $_POST['inputYearStart'];
+				$year_finish = $_POST['inputYearFinish'];
 
-			    $first_start = $_POST['inputFirstStart'];
-			    $first_finish = $_POST['inputFirstFinish'];
+				$first_start = $_POST['inputFirstStart'];
+				$first_finish = $_POST['inputFirstFinish'];
 
-			    $second_start = $_POST['inputSecondStart'];
-			    $second_finish = $_POST['inputSecondFinish'];
+				$second_start = $_POST['inputSecondStart'];
+				$second_finish = $_POST['inputSecondFinish'];
 
-			    $third_start = $_POST['inputThirdStart'];
-			    $third_finish = $_POST['inputThirdFinish'];
+				$third_start = $_POST['inputThirdStart'];
+				$third_finish = $_POST['inputThirdFinish'];
 
-			    $forth_start = $_POST['inputForthStart'];
-			    $forth_finish = $_POST['inputForthFinish'];
+				$forth_start = $_POST['inputForthStart'];
+				$forth_finish = $_POST['inputForthFinish'];
 				if(isset($id)) {
 					$this->table->updateYearAndPeriods($id, $year_start, $year_finish,
 			$first_start, $first_finish, $second_start, $second_finish, $third_start,$third_finish, $forth_start, $forth_finish);
@@ -568,24 +584,25 @@
 					$this->table->addYearAndPeriods($year_start, $year_finish,
 			$first_start, $first_finish, $second_start, $second_finish, $third_start,$third_finish, $forth_start, $forth_finish);
 				}
+				
 				redirect(base_url()."admin/years");
 			} else {
-			if(isset($id)) {
-				$year = $this->admin->getYearById($id);
-				if(isset($year)) {
-					$data['info'] = $year;
-					$data['id'] = $year["id"];
-					$data['title'] = 'Редактирование учебного года';
-					$this->load->view("blankview/blankyearview", $data);
+				if(isset($id)) {
+					$year = $this->admin->getYearById($id);
+					if(isset($year)) {
+						$data['info'] = $year;
+						$data['id'] = $year["id"];
+						$data['title'] = 'Редактирование учебного года';
+						$this->load->view("blankview/blankyearview", $data);
+					} else {
+						//ошибка
+						$data['error'] = "Такого учебного года не существует. Вернитесь обратно";
+						$this->load->view("errorview", $data);
+					}
 				} else {
-					//ошибка
-					$data['error'] = "Такого учебного года не существует. Вернитесь обратно";
-					$this->load->view("errorview", $data);
+					$data['title'] = 'Добавление нового учебного года';
+					$this->load->view("blankview/blankyearview", $data);
 				}
-			} else {
-				$data['title'] = 'Добавление нового учебного года';
-				$this->load->view("blankview/blankyearview", $data);
-			}
 			}
 		}
 
@@ -722,10 +739,8 @@
 		}
 
 
-		function error () {
+		function error() {
 			$data['error'] = "Такой страницы не существует";
 			$this->load->view("errorview", $data);
 		}
-
-
 	}

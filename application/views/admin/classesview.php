@@ -21,10 +21,7 @@
 					</tr>
 				</thead>
 				<tbody>
-				<?php
-					if(is_array($classes) && count($classes) ) {
-						foreach($classes as $class) {
-				?>
+				<?php foreach($classes as $class) : ?>
 					<tr>
 						<td>
 							<input type="radio" name="class_id" value="<?php echo $class['CLASS_ID'];?>">
@@ -36,16 +33,16 @@
 						<td><?php if(isset($class['TEACHER_ID'])) echo $class['TEACHER_NAME'];?></td>
 						<!--<td><?php if(isset($class['CLASS_PREVIOUS'])) echo "Да"; else echo "Нет";?></td>-->
 					</tr>
-				<?php 
-					}} 
-				?>
+				<?php endforeach; ?>
 				</tbody>
 			</table>
 		</div>
 	</div>
+	
 	<?php
 		echo $this->pagination->create_links(); 
-		if(is_array($classes) && count($classes) == 0 && isset($search) && $search != "") {
+		
+		if(count($classes) == 0 && isset($search) && $search != "") {
 			$this->load->view('common/searchalert');
 		}
 	?>

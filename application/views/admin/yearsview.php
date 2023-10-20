@@ -29,10 +29,7 @@
 					</tr>
 				</thead>
 				<tbody>
-				<?php
-					if(is_array($periods) && count($periods) ) {
-						for($i = 0; $i < count($periods); $i++) {
-				?>
+				<?php for($i = 0; $i < count($periods); $i++) : ?>
 					<tr>
 							<td><input type="radio" name="year_id" value="<?php echo $periods[$i]["id"];?>"></td>
 						<td><?php echo $periods[$i]["fifth"]["start"];?></td>
@@ -46,14 +43,15 @@
 						<td><?php if(isset($periods[$i]["forth"]["start"])) echo $periods[$i]["forth"]["start"];?></td>
 						<td><?php if(isset($periods[$i]["forth"]["finish"])) echo $periods[$i]["forth"]["finish"];?></td>
 					</tr>
-					<?php }} ?>
+				<?php endfor; ?>
 				</tbody>
 			</table>
 		</div>
 	</div>
 	<?php
 		echo $this->pagination->create_links();
-		if(is_array($periods) && count($periods) == 0 && isset($search) && $search != "") {
+		
+		if(count($periods) == 0 && isset($search) && $search != "") {
 			$this->load->view('common/searchalert'); 
 		}
 	?>

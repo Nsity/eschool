@@ -16,17 +16,12 @@
 						</tr>
 					</thead>
 				<tbody>
-				<?php
-					if(is_array($subjects) && count($subjects) ) {
-						foreach($subjects as $subject) {
-				?>
+				<?php foreach($subjects as $subject) : ?>
 					<tr>
 						<td><input type="radio" name="subject_id" value="<?php echo $subject['SUBJECT_ID'];?>"></td>
 						<td><?php echo $subject['SUBJECT_NAME'];?></td>
 					</tr>
-				<?php 
-					}} 
-				?>
+				<?php  endforeach; ?>
 				</tbody>
 			</table>
 		</div>
@@ -34,7 +29,7 @@
 	<?php
 		echo $this->pagination->create_links(); 
 
-		if(is_array($subjects) && count($subjects) == 0 && isset($search) && $search != "") {
+		if(count($subjects) == 0 && isset($search) && $search != "") {
 			$this->load->view('common/searchalert');
 		}
 	?>

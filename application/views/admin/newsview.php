@@ -1,6 +1,8 @@
 <div class="container">
 	<h3 class="sidebar-header"><i class="fa fa-newspaper-o"></i> Список новостей</h3>
+	
 	<?php $this->load->view('common/editpanel'); ?>
+	
 	<div class="panel panel-default">
 		<div class="panel-body">
 			<?php $this->load->view('common/searchform', array('placeholder' => "Поиск по дате, теме и тексту новости")); ?>
@@ -16,10 +18,7 @@
 					</tr>
 				</thead>
 				<tbody>
-				<?php
-					if(is_array($news) && count($news) ) {
-						foreach($news as $newsitem) {
-				?>
+				<?php foreach($news as $newsitem) : ?>
 					<tr>
 						<td>
 							<input type="radio" name="news_id" value="<?php echo $newsitem['NEWS_ID'];?>">
@@ -28,16 +27,15 @@
 						<td><?php echo $newsitem['NEWS_THEME'];?></td>
 						<td><?php echo $newsitem['NEWS_TEXT'];?></td>
 					</tr>
-				<?php 
-					}} 
-				?>
+				<?php endforeach; ?>
 				</tbody>
 			</table>
 		</div>
 	</div>
 	<?php
 		echo $this->pagination->create_links(); 
-		if(is_array($news) && count($news) == 0 && isset($search) && $search != "") {
+		
+		if(count($news) == 0 && isset($search) && $search != "") {
 			$this->load->view('common/searchalert');
 		} 
 	?>

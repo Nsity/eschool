@@ -16,24 +16,20 @@
 						</tr>
 					</thead>
 				<tbody>
-				<?php
-					if(is_array($rooms) && count($rooms) ) {
-						foreach($rooms as $room) {
-				?>
+				<?php foreach($rooms as $room) : ?>
 					<tr>
 						<td><input type="radio" name="room_id" value="<?php echo $room['ROOM_ID'];?>"></td>
 						<td><?php echo $room['ROOM_NAME'];?></td>
 					</tr>
-				<?php 
-					}} 
-				?>
+				<?php endforeach; ?>
 				</tbody>
 			</table>
 		</div>
 	</div>
 	<?php 
 		echo $this->pagination->create_links(); 
-		if(is_array($rooms) &&count($rooms) == 0 && isset($search) && $search != "") {
+		
+		if(count($rooms) == 0 && isset($search) && $search != "") {
 			$this->load->view('common/searchalert');
 		} 
 	?>

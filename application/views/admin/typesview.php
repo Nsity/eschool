@@ -16,25 +16,20 @@
 						</tr>
 					</thead>
 					<tbody>
-					<?php
-						if(is_array($types)) {
-							foreach($types as $type) {
-					?>
+					<?php foreach($types as $type) : ?>
 						<tr>
 							<td><input type="radio" name="type_id" value="<?php echo $type['TYPE_ID'];?>"></td>
 							<td><?php echo $type['TYPE_NAME'];?></td>
 						</tr>
-					<?php 
-							}
-						} 
-					?>
+					<?php endforeach; ?>
 				</tbody>
 			</table>
 		</div>
 	</div>
 	<?php
 		echo $this->pagination->create_links();
-		if(is_array($types) && count($types) == 0 && isset($search) && $search != "") {
+		
+		if(count($types) == 0 && isset($search) && $search != "") {
 			$this->load->view('common/searchalert');
 		} 
 	?>
@@ -80,5 +75,5 @@
 		$("tr:not(:first)").click(function() {
 			$(this).children("td").find('input[type=radio]').prop('checked', true).change();
 		});
-		});
+	});
 </script>
